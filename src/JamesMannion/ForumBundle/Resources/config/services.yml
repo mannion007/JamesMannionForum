@@ -1,0 +1,7 @@
+parameters:
+#    james_mannion_forum.example.class: JamesMannion\ForumBundle\Example
+
+services:
+#    james_mannion_forum.example:
+#        class: %james_mannion_forum.example.class%
+#        arguments: [@service_id, "plain_value", %parameter%]

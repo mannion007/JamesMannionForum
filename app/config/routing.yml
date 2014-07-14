@@ -1,0 +1,4 @@
+james_mannion_forum:
+    resource: "@JamesMannionForumBundle/Resources/config/routing.yml"
+    prefix:   /
+
