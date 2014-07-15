@@ -1,3 +1,8 @@
 homepage:
     path:     /
     defaults: { _controller: JamesMannionForumBundle:Default:index }
+
+# Post routes
+JamesMannionForumBundle_post:
+        resource: "@JamesMannionForumBundle/Resources/config/routing/post.yml"
+        prefix:   /post
