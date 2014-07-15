@@ -1,7 +1,6 @@
-james_mannion_forum:
+homepage:
     resource: "@JamesMannionForumBundle/Resources/config/routing.yml"
     prefix:   /
-
 
 # FOS User Bunlde routes
 fos_user_security:
