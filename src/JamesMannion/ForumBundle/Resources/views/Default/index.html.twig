@@ -1,1 +1,7 @@
-Hello {{ name }}!
+{% extends 'JamesMannionForumBundle:Default:layout.html.twig' %}
+
+{% block title %}Welcome to the lovely forum{% endblock %}
+
+{% block content %}
+    {% block fos_user_content %}{% endblock %}
+{% endblock %}
