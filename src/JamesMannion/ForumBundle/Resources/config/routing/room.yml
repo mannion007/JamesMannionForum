@@ -1,0 +1,30 @@
+room:
+    path:     /
+    defaults: { _controller: "JamesMannionForumBundle:Room:index" }
+
+room_show:
+    path:     /{id}/show
+    defaults: { _controller: "JamesMannionForumBundle:Room:show" }
+
+room_new:
+    path:     /new
+    defaults: { _controller: "JamesMannionForumBundle:Room:new" }
+
+room_create:
+    path:     /create
+    defaults: { _controller: "JamesMannionForumBundle:Room:create" }
+    requirements: { _method: post }
+
+room_edit:
+    path:     /{id}/edit
+    defaults: { _controller: "JamesMannionForumBundle:Room:edit" }
+
+room_update:
+    path:     /{id}/update
+    defaults: { _controller: "JamesMannionForumBundle:Room:update" }
+    requirements: { _method: post|put }
+
+room_delete:
+    path:     /{id}/delete
+    defaults: { _controller: "JamesMannionForumBundle:Room:delete" }
+    requirements: { _method: post|delete }

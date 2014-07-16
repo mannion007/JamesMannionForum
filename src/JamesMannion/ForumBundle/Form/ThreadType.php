@@ -7,7 +7,7 @@ use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolverInterface;
 use JamesMannion\ForumBundle\Constants\Label;
 
-class PostType extends AbstractType
+class ThreadType extends AbstractType
 {
         /**
      * @param FormBuilderInterface $builder
@@ -17,10 +17,10 @@ class PostType extends AbstractType
     {
         $builder
             ->add(
-                'body',
+                'title',
                 'text',
                 array(
-                    'label' => Label::POST_BODY
+                    'label' => Label::THREAD_TITLE
                 )
             )
             ->add(
@@ -29,7 +29,16 @@ class PostType extends AbstractType
                 array(
                     'class'     => 'JamesMannionForumBundle:User',
                     'property'  => 'username',
-                    'label'     => Label::POST_AUTHOR
+                    'label'     => Label::THREAD_AUTHOR
+                )
+            )
+            ->add(
+                'room',
+                'entity',
+                array(
+                    'class'     => 'JamesMannionForumBundle:Room',
+                    'property'  => 'name',
+                    'label'     => Label::THREAD_ROOM
                 )
             );
     }
@@ -40,7 +49,7 @@ class PostType extends AbstractType
     public function setDefaultOptions(OptionsResolverInterface $resolver)
     {
         $resolver->setDefaults(array(
-            'data_class' => 'JamesMannion\ForumBundle\Entity\Post'
+            'data_class' => 'JamesMannion\ForumBundle\Entity\Thread'
         ));
     }
 
@@ -49,6 +58,6 @@ class PostType extends AbstractType
      */
     public function getName()
     {
-        return 'jamesmannion_forumbundle_post';
+        return 'jamesmannion_forumbundle_thread';
     }
 }

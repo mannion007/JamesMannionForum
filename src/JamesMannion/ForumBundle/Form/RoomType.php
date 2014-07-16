@@ -2,12 +2,12 @@
 
 namespace JamesMannion\ForumBundle\Form;
 
+use JamesMannion\ForumBundle\Constants\Label;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolverInterface;
-use JamesMannion\ForumBundle\Constants\Label;
 
-class PostType extends AbstractType
+class RoomType extends AbstractType
 {
         /**
      * @param FormBuilderInterface $builder
@@ -17,21 +17,20 @@ class PostType extends AbstractType
     {
         $builder
             ->add(
-                'body',
+                'name',
                 'text',
                 array(
-                    'label' => Label::POST_BODY
+                    'label' => Label::ROOM_NAME
                 )
             )
             ->add(
-                'author',
-                'entity',
+                'description',
+                'text',
                 array(
-                    'class'     => 'JamesMannionForumBundle:User',
-                    'property'  => 'username',
-                    'label'     => Label::POST_AUTHOR
+                    'label' => Label::ROOM_DESCRIPTION
                 )
-            );
+            )
+        ;
     }
     
     /**
@@ -40,7 +39,7 @@ class PostType extends AbstractType
     public function setDefaultOptions(OptionsResolverInterface $resolver)
     {
         $resolver->setDefaults(array(
-            'data_class' => 'JamesMannion\ForumBundle\Entity\Post'
+            'data_class' => 'JamesMannion\ForumBundle\Entity\Room'
         ));
     }
 
@@ -49,6 +48,6 @@ class PostType extends AbstractType
      */
     public function getName()
     {
-        return 'jamesmannion_forumbundle_post';
+        return 'jamesmannion_forumbundle_room';
     }
 }
