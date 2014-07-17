@@ -1,7 +1,7 @@
 {% extends '::base.html.twig' %}
 
-{% block body -%}
-    <h1>Contact Us</h1>
+{% block pageTitle -%}{{ systemName }} | {{ title }}{% endblock pageTitle -%}
 
-    {{ form(form) }}
-{% endblock %}
+{% block contentTitle -%}{{ title }}{% endblock contentTitle -%}
+
+{% block body %}{{ form(form) }}{% endblock %}

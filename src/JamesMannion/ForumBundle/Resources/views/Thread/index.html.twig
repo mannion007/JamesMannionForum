@@ -1,8 +1,10 @@
 {% extends '::base.html.twig' %}
 
-{% block body -%}
-    <h1>Thread list</h1>
+{% block pageTitle -%}{{ systemName }} | {{ title }}{% endblock pageTitle -%}
 
+{% block contentTitle -%}{{ title }}{% endblock contentTitle -%}
+
+{% block body -%}
     <table class="table table-responsive table-striped">
         <thead>
             <tr>

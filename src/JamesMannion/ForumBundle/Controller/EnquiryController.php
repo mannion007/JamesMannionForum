@@ -6,10 +6,16 @@ use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\Request;
 use JamesMannion\ForumBundle\Entity\Enquiry;
 use JamesMannion\ForumBundle\Form\EnquiryType;
+use JamesMannion\ForumBundle\Constants\Config;
+use JamesMannion\ForumBundle\Constants\Title;
 
 class EnquiryController extends Controller
 {
 
+    /**
+     * @param Request $request
+     * @return \Symfony\Component\HttpFoundation\RedirectResponse|\Symfony\Component\HttpFoundation\Response
+     */
     public function indexAction(Request $request)
     {
         $entity = new Enquiry();
@@ -25,18 +31,16 @@ class EnquiryController extends Controller
         }
 
         return $this->render('JamesMannionForumBundle:Enquiry:new.html.twig', array(
-            'entity' => $entity,
-            'form'   => $form->createView(),
+            'systemName'    => Config::SYSTEM_NAME,
+            'title'         => Title::ENQUIRIES,
+            'entity'        => $entity,
+            'form'          => $form->createView(),
         ));
-
     }
 
     /**
-     * Creates a form to create an Enquiry.
-     *
-     * @param Enquiry $entity The entity
-     *
-     * @return \Symfony\Component\Form\Form The form
+     * @param Enquiry $entity
+     * @return \Symfony\Component\Form\Form
      */
     private function createCreateForm(Enquiry $entity)
     {

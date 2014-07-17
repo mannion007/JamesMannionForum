@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html>
     <head>
-        <title>{% block title %}Welcome{% endblock %}</title>
+        <title>{% block pageTitle %}{% endblock pageTitle %}</title>
         <meta charset="UTF-8" />
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
@@ -82,13 +82,12 @@
                 {% endfor %}
             {% endfor %}
 
-            <div>
-                {% block fos_user_content %}
-                {% endblock fos_user_content %}
+            {% block fos_user_content %}{% endblock fos_user_content %}
 
-                {% block body %}
-                {% endblock body %}
-            </div>
+            <h1>{% block contentTitle %}{% endblock contentTitle %}</h1>
+
+            {% block body %}{% endblock body %}
+
         </div>
 
         <!-- jQuery (necessary for Bootstraps JavaScript plugins) -->

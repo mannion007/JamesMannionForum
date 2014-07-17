@@ -10,6 +10,7 @@ namespace JamesMannion\ForumBundle\Constants;
 
 
 class Config {
+    const SYSTEM_NAME = 'My Lovely Forum';
     const MINIMUM_AGE = 18;
     const MAXIMUM_AGE = 100;
 }

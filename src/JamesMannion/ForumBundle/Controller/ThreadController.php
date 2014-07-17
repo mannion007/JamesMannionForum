@@ -4,9 +4,10 @@ namespace JamesMannion\ForumBundle\Controller;
 
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
-
 use JamesMannion\ForumBundle\Entity\Thread;
 use JamesMannion\ForumBundle\Form\ThreadType;
+use JamesMannion\ForumBundle\Constants\Config;
+use JamesMannion\ForumBundle\Constants\Title;
 
 /**
  * Thread controller.
@@ -26,7 +27,9 @@ class ThreadController extends Controller
         $entities = $em->getRepository('JamesMannionForumBundle:Thread')->findAll();
 
         return $this->render('JamesMannionForumBundle:Thread:index.html.twig', array(
-            'entities' => $entities,
+            'systemName'    => Config::SYSTEM_NAME,
+            'title'     => Title::THREADS_LIST,
+            'entities'      => $entities,
         ));
     }
     /**

@@ -4,20 +4,17 @@ namespace JamesMannion\ForumBundle\Controller;
 
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
-
 use JamesMannion\ForumBundle\Entity\Room;
 use JamesMannion\ForumBundle\Form\RoomType;
+use JamesMannion\ForumBundle\Constants\Config;
+use JamesMannion\ForumBundle\Constants\Title;
 
-/**
- * Room controller.
- *
- */
+
 class RoomController extends Controller
 {
 
     /**
-     * Lists all Room entities.
-     *
+     * @return \Symfony\Component\HttpFoundation\Response
      */
     public function indexAction()
     {
@@ -26,12 +23,15 @@ class RoomController extends Controller
         $entities = $em->getRepository('JamesMannionForumBundle:Room')->findAll();
 
         return $this->render('JamesMannionForumBundle:Room:index.html.twig', array(
-            'entities' => $entities,
+            'systemName'    => Config::SYSTEM_NAME,
+            'title'         => Title::ROOMS_LIST,
+            'entities'      => $entities,
         ));
     }
+
     /**
-     * Creates a new Room entity.
-     *
+     * @param Request $request
+     * @return \Symfony\Component\HttpFoundation\RedirectResponse|\Symfony\Component\HttpFoundation\Response
      */
     public function createAction(Request $request)
     {

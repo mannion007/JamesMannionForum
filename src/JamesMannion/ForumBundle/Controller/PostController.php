@@ -4,14 +4,11 @@ namespace JamesMannion\ForumBundle\Controller;
 
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
-
 use JamesMannion\ForumBundle\Entity\Post;
 use JamesMannion\ForumBundle\Form\PostType;
+use JamesMannion\ForumBundle\Constants\Config;
+use JamesMannion\ForumBundle\Constants\Title;
 
-/**
- * Post controller.
- *
- */
 class PostController extends Controller
 {
 
@@ -26,7 +23,9 @@ class PostController extends Controller
         $entities = $em->getRepository('JamesMannionForumBundle:Post')->findAll();
 
         return $this->render('JamesMannionForumBundle:Post:index.html.twig', array(
-            'entities' => $entities,
+            'systemName'    => Config::SYSTEM_NAME,
+            'title'         => Title::POSTS_LIST,
+            'entities'      => $entities,
         ));
     }
     /**

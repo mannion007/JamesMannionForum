@@ -42,6 +42,13 @@ class RegistrationFormType extends BaseType
 
     }
 
+    public function getDefaultOptions(array $options)
+    {
+        return array(
+            'validation_groups' => array('registration'),
+        );
+    }
+
     public function getName()
     {
         return 'forum_user_registration';
