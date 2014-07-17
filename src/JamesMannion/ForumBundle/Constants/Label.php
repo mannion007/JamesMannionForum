@@ -31,4 +31,11 @@ class Label {
     const POST_AUTHOR   = 'Post Author';
     const POST_THREAD   = 'Post Thread';
 
+    /*
+     * User Labels
+     */
+    const REGISTRATION_FORENAME = 'Forename';
+    const REGISTRATION_SURNAME  = 'Surname';
+    const REGISTRATION_DOB      = 'Date of Birth';
+
 }

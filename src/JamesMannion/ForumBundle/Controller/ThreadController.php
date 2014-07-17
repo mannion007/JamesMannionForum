@@ -36,6 +36,8 @@ class ThreadController extends Controller
     public function createAction(Request $request)
     {
         $entity = new Thread();
+        $entity->setCreated(new \DateTime());
+        $entity->setAuthor($this->getUser());
         $form = $this->createCreateForm($entity);
         $form->handleRequest($request);
 

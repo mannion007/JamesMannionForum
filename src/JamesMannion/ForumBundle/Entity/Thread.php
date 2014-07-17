@@ -9,6 +9,7 @@ use Doctrine\ORM\Mapping as ORM;
  *
  * @ORM\Table()
  * @ORM\Entity
+ * @ORM\HasLifecycleCallbacks()
  */
 class Thread
 {
@@ -118,14 +119,12 @@ class Thread
     }
 
     /**
-     * Set updated
-     *
-     * @param \DateTime $updated
-     * @return Thread
+     * @return $this
+     * @ORM\PrePersist
      */
-    public function setUpdated($updated)
+    public function setUpdated()
     {
-        $this->updated = $updated;
+        $this->updated = new \DateTime('now');
 
         return $this;
     }
