@@ -38,4 +38,11 @@ class Label {
     const REGISTRATION_SURNAME  = 'Surname';
     const REGISTRATION_DOB      = 'Date of Birth';
 
+    /*
+     * Contact form label
+     */
+    const ENQUIRY_NAME      = 'Name';
+    const ENQUIRY_EMAIL     = 'Email Address';
+    const ENQUIRY_TELEPHONE = 'Contact Number';
+    const ENQUIRY_BODY      = 'Enquiry';
 }

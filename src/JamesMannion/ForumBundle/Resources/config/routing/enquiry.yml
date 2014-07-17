@@ -1,0 +1,8 @@
+enquiry:
+    path:     /
+    defaults: { _controller: "JamesMannionForumBundle:Enquiry:index" }
+
+enquiry_create:
+    path:     /create
+    defaults: { _controller: "JamesMannionForumBundle:Enquiry:create" }
+    requirements: { _method: post }

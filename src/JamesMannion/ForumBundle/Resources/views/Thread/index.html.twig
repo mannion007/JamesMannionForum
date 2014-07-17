@@ -3,7 +3,7 @@
 {% block body -%}
     <h1>Thread list</h1>
 
-    <table class="table table-responsive records_list">
+    <table class="table table-responsive table-striped">
         <thead>
             <tr>
                 <th>Id</th>
@@ -11,6 +11,7 @@
                 <th>Created</th>
                 <th>Updated</th>
                 <th>Author</th>
+                <th>Posts</th>
                 <th>Actions</th>
             </tr>
         </thead>
@@ -22,6 +23,7 @@
                 <td>{% if entity.created %}{{ entity.created|date('Y-m-d H:i:s') }}{% endif %}</td>
                 <td>{% if entity.updated %}{{ entity.updated|date('Y-m-d H:i:s') }}{% endif %}</td>
                 <td>{{ entity.author }}</td>
+                <td>{{ entity.posts | length }}</td>
                 <td>
                     <a href="{{ path('thread_show', { 'id': entity.id }) }}" class="btn btn-sm btn-default">show</a>
                     <a href="{{ path('thread_edit', { 'id': entity.id }) }}" class="btn btn-sm btn-default">edit</a>
