@@ -3,13 +3,7 @@
 {% block body -%}
     <h1>Post creation</h1>
 
-    {{ form(form) }}
+    <a href="{{ path('post') }}" class="btn btn-default">Back to list</a>
 
-        <ul class="record_actions">
-    <li>
-        <a href="{{ path('post') }}">
-            Back to the list
-        </a>
-    </li>
-</ul>
+    {{ form(form) }}
 {% endblock %}

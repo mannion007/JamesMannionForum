@@ -1,0 +1,10 @@
+{% extends '::base.html.twig' %}
+
+{% block body -%}
+    <h1>Room creation</h1>
+
+    <a href="{{ path('room') }}" class="btn btn-default">Back to list</a>
+
+    {{ form(form) }}
+
+{% endblock %}

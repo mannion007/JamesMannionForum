@@ -1,0 +1,9 @@
+{% extends '::base.html.twig' %}
+
+{% block body -%}
+    <h1>Thread creation</h1>
+
+    <a href="{{ path('thread') }}" class="btn btn-default">Back to list</a>
+
+    {{ form(form) }}
+{% endblock %}
