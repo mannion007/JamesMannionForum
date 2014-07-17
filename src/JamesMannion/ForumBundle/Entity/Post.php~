@@ -28,6 +28,12 @@ class Post
     private $author;
 
     /**
+     * @ORM\ManyToOne(targetEntity="Thread", inversedBy="posts")
+     * @ORM\JoinColumn(name="thread_id", referencedColumnName="id")
+     */
+    private $thread;
+
+    /**
      * @var string
      *
      * @ORM\Column(name="body", type="text")

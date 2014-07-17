@@ -28,6 +28,12 @@ class Post
     private $author;
 
     /**
+     * @ORM\ManyToOne(targetEntity="Thread", inversedBy="posts")
+     * @ORM\JoinColumn(name="thread_id", referencedColumnName="id")
+     */
+    private $thread;
+
+    /**
      * @var string
      *
      * @ORM\Column(name="body", type="text")
@@ -89,5 +95,28 @@ class Post
     public function getAuthor()
     {
         return $this->author;
+    }
+
+    /**
+     * Set thread
+     *
+     * @param \JamesMannion\ForumBundle\Entity\Thread $thread
+     * @return Post
+     */
+    public function setThread(\JamesMannion\ForumBundle\Entity\Thread $thread = null)
+    {
+        $this->thread = $thread;
+
+        return $this;
+    }
+
+    /**
+     * Get thread
+     *
+     * @return \JamesMannion\ForumBundle\Entity\Thread 
+     */
+    public function getThread()
+    {
+        return $this->thread;
     }
 }

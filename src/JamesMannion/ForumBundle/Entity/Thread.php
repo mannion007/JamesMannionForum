@@ -28,6 +28,11 @@ class Thread
     private $room;
 
     /**
+     * @ORM\OneToMany(targetEntity="Post", mappedBy="thread")
+     */
+    protected $posts;
+
+    /**
      * @var string
      *
      * @ORM\Column(name="title", type="string", length=255)
@@ -179,5 +184,45 @@ class Thread
     public function getRoom()
     {
         return $this->room;
+    }
+    /**
+     * Constructor
+     */
+    public function __construct()
+    {
+        $this->posts = new \Doctrine\Common\Collections\ArrayCollection();
+    }
+
+    /**
+     * Add posts
+     *
+     * @param \JamesMannion\ForumBundle\Entity\Post $posts
+     * @return Thread
+     */
+    public function addPost(\JamesMannion\ForumBundle\Entity\Post $posts)
+    {
+        $this->posts[] = $posts;
+
+        return $this;
+    }
+
+    /**
+     * Remove posts
+     *
+     * @param \JamesMannion\ForumBundle\Entity\Post $posts
+     */
+    public function removePost(\JamesMannion\ForumBundle\Entity\Post $posts)
+    {
+        $this->posts->removeElement($posts);
+    }
+
+    /**
+     * Get posts
+     *
+     * @return \Doctrine\Common\Collections\Collection 
+     */
+    public function getPosts()
+    {
+        return $this->posts;
     }
 }

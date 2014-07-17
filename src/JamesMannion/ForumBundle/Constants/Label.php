@@ -29,5 +29,6 @@ class Label {
      */
     const POST_BODY     = 'Post Body';
     const POST_AUTHOR   = 'Post Author';
+    const POST_THREAD   = 'Post Thread';
 
 }

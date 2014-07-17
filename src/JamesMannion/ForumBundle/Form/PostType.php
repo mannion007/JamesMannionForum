@@ -31,7 +31,18 @@ class PostType extends AbstractType
                     'property'  => 'username',
                     'label'     => Label::POST_AUTHOR
                 )
-            );
+            )
+            ->add(
+                'thread',
+                'entity',
+                array(
+                    'class'     => 'JamesMannionForumBundle:Thread',
+                    'property'  => 'title',
+                    'label'     => Label::POST_THREAD
+                )
+            )
+
+        ;
     }
     
     /**

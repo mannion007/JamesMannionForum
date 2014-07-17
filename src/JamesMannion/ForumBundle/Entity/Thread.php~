@@ -28,6 +28,11 @@ class Thread
     private $room;
 
     /**
+     * @ORM\OneToMany(targetEntity="Post", mappedBy="thread")
+     */
+    protected $posts;
+
+    /**
      * @var string
      *
      * @ORM\Column(name="title", type="string", length=255)
@@ -156,5 +161,28 @@ class Thread
     public function getAuthor()
     {
         return $this->author;
+    }
+
+    /**
+     * Set room
+     *
+     * @param \JamesMannion\ForumBundle\Entity\Room $room
+     * @return Thread
+     */
+    public function setRoom(\JamesMannion\ForumBundle\Entity\Room $room = null)
+    {
+        $this->room = $room;
+
+        return $this;
+    }
+
+    /**
+     * Get room
+     *
+     * @return \JamesMannion\ForumBundle\Entity\Room 
+     */
+    public function getRoom()
+    {
+        return $this->room;
     }
 }
