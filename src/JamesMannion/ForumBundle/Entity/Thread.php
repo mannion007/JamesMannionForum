@@ -55,9 +55,8 @@ class Thread
     private $updated;
 
     /**
-     * @var \stdClass
-     *
-     * @ORM\Column(name="author", type="object")
+     * @ORM\ManyToOne(targetEntity="User", inversedBy="threads")
+     * @ORM\JoinColumn(name="user_id", referencedColumnName="id")
      */
     private $author;
 

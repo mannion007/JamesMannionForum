@@ -1,8 +1,11 @@
 {% extends '::base.html.twig' %}
 
-{% block body -%}
-    <h1>Thread creation</h1>
+{% block pageTitle -%}{{ systemName }} | {{ title }}{% endblock pageTitle -%}
 
+{% block contentTitle -%}{{ title }}{% endblock contentTitle -%}
+
+{% block body -%}
+    <p>Creating a thread in {{ roomEntity.name }}</p>
     <a href="{{ path('thread') }}" class="btn btn-default">Back to list</a>
 
     {{ form(form) }}

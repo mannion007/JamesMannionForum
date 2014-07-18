@@ -7,8 +7,10 @@ thread_show:
     defaults: { _controller: "JamesMannionForumBundle:Thread:show" }
 
 thread_new:
-    path:     /new
-    defaults: { _controller: "JamesMannionForumBundle:Thread:new" }
+    path:     /new/{roomId}
+    defaults: { _controller: "JamesMannionForumBundle:Thread:new"}
+    requirements:
+        roomId: \d+
 
 thread_create:
     path:     /create

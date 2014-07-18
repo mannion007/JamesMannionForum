@@ -12,7 +12,7 @@ room_new:
 
 room_create:
     path:     /create
-    defaults: { _controller: "JamesMannionForumBundle:Room:create" }
+    defaults: { _controller: "JamesMannionForumBundle:Room:adminCreate" }
     requirements: { _method: post }
 
 room_edit:

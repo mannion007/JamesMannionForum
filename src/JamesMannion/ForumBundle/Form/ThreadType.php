@@ -22,15 +22,6 @@ class ThreadType extends AbstractType
                 array(
                     'label' => Label::THREAD_TITLE
                 )
-            )
-            ->add(
-                'room',
-                'entity',
-                array(
-                    'class'     => 'JamesMannionForumBundle:Room',
-                    'property'  => 'name',
-                    'label'     => Label::THREAD_ROOM
-                )
             );
     }
     

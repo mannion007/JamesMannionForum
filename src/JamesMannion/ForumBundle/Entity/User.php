@@ -36,6 +36,11 @@ class User extends BaseUser
     protected $posts;
 
     /**
+     * @ORM\OneToMany(targetEntity="Thread", mappedBy="author")
+     */
+    protected $threads;
+
+    /**
      * @var string
      *
      * @ORM\Column(name="forename", type="string", length=255)

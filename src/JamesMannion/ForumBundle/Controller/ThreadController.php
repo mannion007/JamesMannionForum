@@ -2,9 +2,11 @@
 
 namespace JamesMannion\ForumBundle\Controller;
 
+use JamesMannion\ForumBundle\Constants\Exception;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use JamesMannion\ForumBundle\Entity\Thread;
+use JamesMannion\ForumBundle\Entity\Room;
 use JamesMannion\ForumBundle\Form\ThreadType;
 use JamesMannion\ForumBundle\Constants\Config;
 use JamesMannion\ForumBundle\Constants\Title;
@@ -32,9 +34,10 @@ class ThreadController extends Controller
             'entities'      => $entities,
         ));
     }
+
     /**
-     * Creates a new Thread entity.
-     *
+     * @param Request $request
+     * @return \Symfony\Component\HttpFoundation\RedirectResponse|\Symfony\Component\HttpFoundation\Response
      */
     public function createAction(Request $request)
     {
@@ -78,17 +81,31 @@ class ThreadController extends Controller
     }
 
     /**
-     * Displays a form to create a new Thread entity.
-     *
+     * @param $roomId
+     * @return \Symfony\Component\HttpFoundation\Response
+     * @throws \Symfony\Component\HttpKernel\Exception\NotFoundHttpException
      */
-    public function newAction()
+    public function newAction($roomId)
     {
+        $em = $this->getDoctrine()->getManager();
+        /** @var Room $roomEntity */
+        $roomEntity = $em->getRepository('JamesMannionForumBundle:Room')->find($roomId);
+
+        if (!$roomEntity) {
+            throw $this->createNotFoundException(Exception::ROOM_NOT_FOUND);
+        }
+        /** @var Thread $entity */
         $entity = new Thread();
+        $entity->setRoom($roomEntity);
+
         $form   = $this->createCreateForm($entity);
 
         return $this->render('JamesMannionForumBundle:Thread:new.html.twig', array(
-            'entity' => $entity,
-            'form'   => $form->createView(),
+            'systemName'    => Config::SYSTEM_NAME,
+            'title'         => Title::THREADS_NEW,
+            'entity'        => $entity,
+            'roomEntity'    => $roomEntity,
+            'form'          => $form->createView()
         ));
     }
 

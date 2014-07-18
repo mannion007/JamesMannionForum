@@ -30,10 +30,26 @@ class RoomController extends Controller
     }
 
     /**
+     * @return \Symfony\Component\HttpFoundation\Response
+     */
+    public function adminIndexAction()
+    {
+        $em = $this->getDoctrine()->getManager();
+
+        $entities = $em->getRepository('JamesMannionForumBundle:Room')->findAll();
+
+        return $this->render('JamesMannionForumBundle:Room:Admin:index.html.twig', array(
+            'systemName'    => Config::SYSTEM_NAME,
+            'title'         => Title::ROOMS_LIST,
+            'entities'      => $entities,
+        ));
+    }
+
+    /**
      * @param Request $request
      * @return \Symfony\Component\HttpFoundation\RedirectResponse|\Symfony\Component\HttpFoundation\Response
      */
-    public function createAction(Request $request)
+    public function adminCreateAction(Request $request)
     {
         $entity = new Room();
         $form = $this->createCreateForm($entity);
@@ -88,13 +104,15 @@ class RoomController extends Controller
     }
 
     /**
-     * Finds and displays a Room entity.
-     *
+     * @param $id
+     * @return \Symfony\Component\HttpFoundation\Response
+     * @throws \Symfony\Component\HttpKernel\Exception\NotFoundHttpException
      */
     public function showAction($id)
     {
         $em = $this->getDoctrine()->getManager();
 
+        /** @var Room $entity */
         $entity = $em->getRepository('JamesMannionForumBundle:Room')->find($id);
 
         if (!$entity) {
@@ -104,8 +122,10 @@ class RoomController extends Controller
         $deleteForm = $this->createDeleteForm($id);
 
         return $this->render('JamesMannionForumBundle:Room:show.html.twig', array(
-            'entity'      => $entity,
-            'delete_form' => $deleteForm->createView(),
+            'systemName'    => Config::SYSTEM_NAME,
+            'title'         => $entity->getName(),
+            'entity'        => $entity,
+            'delete_form'   => $deleteForm->createView(),
         ));
     }
 

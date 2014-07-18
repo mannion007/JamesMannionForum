@@ -1,7 +1,10 @@
 {% extends '::base.html.twig' %}
 
+{% block pageTitle -%}{{ systemName }} | {{ title }}{% endblock pageTitle -%}
+
+{% block contentTitle -%}{{ title }}{% endblock contentTitle -%}
+
 {% block body -%}
-    <h1>Room</h1>
 
     <table class="table table-responsive table-striped">
         <tbody>
@@ -21,8 +24,6 @@
     </table>
 
     <a href="{{ path('room') }}" class="btn btn-default">Back to the list</a>
-
-    <a href="{{ path('room_edit', { 'id': entity.id }) }}" class="btn btn-default">Edit</a>
 
     {{ form(delete_form) }}
 {% endblock %}
