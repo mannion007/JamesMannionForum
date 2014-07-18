@@ -22,7 +22,7 @@ class ContentController extends Controller
             'JamesMannionForumBundle:Content:index.html.twig',
             array(
                 'systemName'    => Config::SYSTEM_NAME,
-                'pageTitle'     => Title::HOMEPAGE,
+                'title'     => Title::HOMEPAGE,
                 'contentTitle'  => 'Welcome!',
                 'content'       => 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Ut quis tempor diam,
                                     non mattis ligula. Cras eget suscipit mi. Mauris eget massa euismod, lobortis
