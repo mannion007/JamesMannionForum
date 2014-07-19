@@ -6,6 +6,7 @@ use Doctrine\ORM\Mapping as ORM;
 use FOS\UserBundle\Model\User as BaseUser;
 use Symfony\Component\Validator\Constraints as Assert;
 use Doctrine\Common\Collections\ArrayCollection;
+
 /**
  * User
  *
@@ -14,12 +15,6 @@ use Doctrine\Common\Collections\ArrayCollection;
  */
 class User extends BaseUser
 {
-
-    public function __construct()
-    {
-        parent::__construct();
-        $this->posts = new ArrayCollection();
-    }
 
     /**
      * @var integer
@@ -59,6 +54,16 @@ class User extends BaseUser
      * @ORM\Column(name="dob", type="date")
      */
     private $dob;
+
+    /**
+     * Constructor
+     */
+    public function __construct()
+    {
+        parent::__construct();
+        $this->posts = new ArrayCollection();
+        $this->threads = new ArrayCollection();
+    }
 
     /**
      * Set forename

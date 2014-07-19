@@ -9,7 +9,10 @@ use JamesMannion\ForumBundle\Constants\Label;
 
 class ThreadType extends AbstractType
 {
-        /**
+
+    private $name = 'threadForm';
+
+    /**
      * @param FormBuilderInterface $builder
      * @param array $options
      */
@@ -21,6 +24,15 @@ class ThreadType extends AbstractType
                 'text',
                 array(
                     'label' => Label::THREAD_TITLE
+                )
+            )
+            ->add(
+                'room',
+                'entity',
+                array(
+                    'class'     => 'JamesMannionForumBundle:Room',
+                    'property'  => 'name',
+                    'label'     => Label::THREAD_ROOM
                 )
             );
     }
@@ -40,6 +52,6 @@ class ThreadType extends AbstractType
      */
     public function getName()
     {
-        return 'jamesmannion_forumbundle_thread';
+        return $this->name;
     }
 }

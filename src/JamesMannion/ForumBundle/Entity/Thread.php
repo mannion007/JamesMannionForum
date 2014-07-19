@@ -3,6 +3,7 @@
 namespace JamesMannion\ForumBundle\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
+use Doctrine\Common\Collections\ArrayCollection as ArrayCollection;
 
 /**
  * Thread
@@ -60,6 +61,13 @@ class Thread
      */
     private $author;
 
+    /**
+     * Constructor
+     */
+    public function __construct()
+    {
+        $this->posts = new ArrayCollection();
+    }
 
     /**
      * Get id
@@ -182,13 +190,6 @@ class Thread
     public function getRoom()
     {
         return $this->room;
-    }
-    /**
-     * Constructor
-     */
-    public function __construct()
-    {
-        $this->posts = new \Doctrine\Common\Collections\ArrayCollection();
     }
 
     /**

@@ -9,7 +9,9 @@ use Symfony\Component\OptionsResolver\OptionsResolverInterface;
 
 class RoomType extends AbstractType
 {
-        /**
+    private $name = 'roomForm';
+
+    /**
      * @param FormBuilderInterface $builder
      * @param array $options
      */
@@ -48,6 +50,6 @@ class RoomType extends AbstractType
      */
     public function getName()
     {
-        return 'jamesmannion_forumbundle_room';
+        return $this->name;
     }
 }

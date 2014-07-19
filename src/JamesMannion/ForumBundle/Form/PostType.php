@@ -9,7 +9,10 @@ use JamesMannion\ForumBundle\Constants\Label;
 
 class PostType extends AbstractType
 {
-        /**
+
+    private $name = 'postForm';
+
+    /**
      * @param FormBuilderInterface $builder
      * @param array $options
      */
@@ -18,18 +21,9 @@ class PostType extends AbstractType
         $builder
             ->add(
                 'body',
-                'text',
+                'textarea',
                 array(
                     'label' => Label::POST_BODY
-                )
-            )
-            ->add(
-                'author',
-                'entity',
-                array(
-                    'class'     => 'JamesMannionForumBundle:User',
-                    'property'  => 'username',
-                    'label'     => Label::POST_AUTHOR
                 )
             )
             ->add(
@@ -40,9 +34,7 @@ class PostType extends AbstractType
                     'property'  => 'title',
                     'label'     => Label::POST_THREAD
                 )
-            )
-
-        ;
+            );
     }
     
     /**
@@ -60,6 +52,6 @@ class PostType extends AbstractType
      */
     public function getName()
     {
-        return 'jamesmannion_forumbundle_post';
+        return $this->name;
     }
 }

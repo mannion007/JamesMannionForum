@@ -9,7 +9,10 @@ use JamesMannion\ForumBundle\Constants\Label;
 
 class EnquiryType extends AbstractType
 {
-        /**
+
+    private $name = 'enquiryForm';
+
+    /**
      * @param FormBuilderInterface $builder
      * @param array $options
      */
@@ -66,6 +69,6 @@ class EnquiryType extends AbstractType
      */
     public function getName()
     {
-        return 'jamesmannion_forumbundle_enquiry';
+        return $this->name;
     }
 }

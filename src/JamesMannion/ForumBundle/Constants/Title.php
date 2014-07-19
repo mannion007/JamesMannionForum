@@ -12,14 +12,10 @@ namespace JamesMannion\ForumBundle\Constants;
 class Title {
 
     const HOMEPAGE      = 'Welcome';
-    const ENQUIRIES     = 'Enquiries';
+    const ENQUIRIES     = 'Contact Admin';
     const ROOMS_LIST    = 'Rooms';
-
     const THREADS_LIST  = 'Threads';
     const THREADS_NEW   = 'Create a Thread';
-
-
     const POSTS_LIST    = 'Posts';
-
 
 } 
