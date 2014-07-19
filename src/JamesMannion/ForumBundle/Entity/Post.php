@@ -34,6 +34,13 @@ class Post
     private $thread;
 
     /**
+     * @var boolean
+     *
+     * @ORM\Column(name="primaryPost", type="boolean")
+     */
+    private $primaryPost = false;
+
+    /**
      * @var string
      *
      * @ORM\Column(name="body", type="text")
@@ -119,4 +126,20 @@ class Post
     {
         return $this->thread;
     }
+    /**
+     * @param boolean $primaryPost
+     */
+    public function setPrimaryPost($primaryPost)
+    {
+        $this->primaryPost = $primaryPost;
+    }
+
+    /**
+     * @return boolean
+     */
+    public function getPrimaryPost()
+    {
+        return $this->primaryPost;
+    }
+
 }

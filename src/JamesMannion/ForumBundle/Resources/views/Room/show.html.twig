@@ -23,6 +23,20 @@
         </tbody>
     </table>
 
+    <h2>Threads in {{ title }}</h2>
+
+    {% if(threads|length > 0) %}
+        <ul>
+            {% for thread in threads %}
+                <li>{{ thread.title }}</li>
+            {% endfor %}
+        </ul>
+    {% else %}
+        <p>There are no threads in this room</p>
+    {% endif %}
+
+
+
     <a href="{{ path('room') }}" class="btn btn-default">Back to the list</a>
 
     {{ form(delete_form) }}
