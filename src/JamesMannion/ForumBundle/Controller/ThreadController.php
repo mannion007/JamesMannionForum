@@ -3,6 +3,7 @@
 namespace JamesMannion\ForumBundle\Controller;
 
 use JamesMannion\ForumBundle\Constants\Exception;
+use JamesMannion\ForumBundle\Entity\Post;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use JamesMannion\ForumBundle\Entity\Thread;
@@ -36,16 +37,27 @@ class ThreadController extends Controller
     }
 
     /**
+     * @param $roomId
      * @param Request $request
      * @return \Symfony\Component\HttpFoundation\RedirectResponse|\Symfony\Component\HttpFoundation\Response
+     * @throws \Symfony\Component\HttpKernel\Exception\NotFoundHttpException
      */
-    public function createAction(Request $request)
+    public function createAction($roomId, Request $request)
     {
-        $entity = new Thread();
-        $entity->setCreated(new \DateTime());
-        $entity->setAuthor($this->getUser());
+        $em = $this->getDoctrine()->getManager();
+        /** @var Room $room */
+        $room = $em->getRepository('JamesMannionForumBundle:Room')->find($roomId);
 
-        $form = $this->createCreateForm($entity);
+        if (!$room) {
+            throw $this->createNotFoundException(Exception::ROOM_NOT_FOUND);
+        }
+
+        $entity = new Thread();
+        $entity->setAuthor($this->getUser());
+        $entity->setRoom($room);
+
+        $form = $this->createCreateForm($room->getId(), $entity);
+
         $form->handleRequest($request);
 
         if ($form->isValid()) {
@@ -53,26 +65,33 @@ class ThreadController extends Controller
             $em->persist($entity);
             $em->flush();
 
-            return $this->redirect($this->generateUrl('thread_show', array('id' => $entity->getId())));
+            return $this->redirect(
+                $this->generateUrl(
+                    'thread_show',
+                    array(
+                        'id' => $entity->getId()
+                    )
+                )
+            );
         }
 
         return $this->render('JamesMannionForumBundle:Thread:new.html.twig', array(
-            'entity' => $entity,
-            'form'   => $form->createView(),
+            'systemName'    => Config::SYSTEM_NAME,
+            'title'         => Title::THREADS_NEW,
+            'entity'        => $entity,
+            'form'          => $form->createView(),
         ));
     }
 
     /**
-     * Creates a form to create a Thread entity.
-     *
-     * @param Thread $entity The entity
-     *
-     * @return \Symfony\Component\Form\Form The form
+     * @param $roomId
+     * @param Thread $entity
+     * @return \Symfony\Component\Form\Form
      */
-    private function createCreateForm(Thread $entity)
+    private function createCreateForm($roomId, Thread $entity)
     {
         $form = $this->createForm(new ThreadType(), $entity, array(
-            'action' => $this->generateUrl('thread_create'),
+            'action' => $this->generateUrl('thread_create', array('roomId' => $roomId)),
             'method' => 'POST',
         ));
 
@@ -95,17 +114,16 @@ class ThreadController extends Controller
         if (!$roomEntity) {
             throw $this->createNotFoundException(Exception::ROOM_NOT_FOUND);
         }
-        /** @var Thread $entity */
-        $entity = new Thread();
-        $entity->setRoom($roomEntity);
 
-        $form   = $this->createCreateForm($entity);
+        $entity = new Thread();
+
+        $form   = $this->createCreateForm($roomEntity->getId(), $entity);
 
         return $this->render('JamesMannionForumBundle:Thread:new.html.twig', array(
             'systemName'    => Config::SYSTEM_NAME,
             'title'         => Title::THREADS_NEW,
             'entity'        => $entity,
-            'roomEntity'    => $roomEntity,
+            'room'          => $roomEntity,
             'form'          => $form->createView()
         ));
     }

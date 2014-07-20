@@ -27,14 +27,14 @@ class PostType extends AbstractType
                 )
             )
             ->add(
-                'thread',
-                'entity',
+                'primaryPost',
+                'hidden',
                 array(
-                    'class'     => 'JamesMannionForumBundle:Thread',
-                    'property'  => 'title',
-                    'label'     => Label::POST_THREAD
+                    'data' => true
                 )
             );
+        ;
+
     }
     
     /**

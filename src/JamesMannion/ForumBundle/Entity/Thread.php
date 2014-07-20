@@ -17,6 +17,7 @@ class Thread
     /**
      * @var integer
      *
+     *
      * @ORM\Column(name="id", type="integer")
      * @ORM\Id
      * @ORM\GeneratedValue(strategy="AUTO")
@@ -30,7 +31,7 @@ class Thread
     private $room;
 
     /**
-     * @ORM\OneToMany(targetEntity="Post", mappedBy="thread")
+     * @ORM\OneToMany(targetEntity="Post", mappedBy="thread", cascade={"persist"}))
      */
     protected $posts;
 
@@ -51,7 +52,7 @@ class Thread
     /**
      * @var \DateTime
      *
-     * @ORM\Column(name="updated", type="datetime")
+     * @ORM\Column(name="updated", type="datetime", nullable=true)
      */
     private $updated;
 
@@ -103,14 +104,12 @@ class Thread
     }
 
     /**
-     * Set created
-     *
-     * @param \DateTime $created
-     * @return Thread
+     * @ORM\PrePersist
+     * @return $this
      */
-    public function setCreated($created)
+    public function setCreated()
     {
-        $this->created = $created;
+        $this->created = new \DateTime();
 
         return $this;
     }
@@ -127,7 +126,7 @@ class Thread
 
     /**
      * @return $this
-     * @ORM\PrePersist
+     * @ORM\PreUpdate
      */
     public function setUpdated()
     {
@@ -201,6 +200,8 @@ class Thread
     public function addPost(\JamesMannion\ForumBundle\Entity\Post $posts)
     {
         $this->posts[] = $posts;
+
+        $posts->setThread($this);
 
         return $this;
     }

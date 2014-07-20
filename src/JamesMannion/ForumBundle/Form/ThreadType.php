@@ -2,6 +2,7 @@
 
 namespace JamesMannion\ForumBundle\Form;
 
+use JamesMannion\ForumBundle\Entity\Post;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolverInterface;
@@ -27,14 +28,15 @@ class ThreadType extends AbstractType
                 )
             )
             ->add(
-                'room',
-                'entity',
+                'posts',
+                'collection',
                 array(
-                    'class'     => 'JamesMannionForumBundle:Room',
-                    'property'  => 'name',
-                    'label'     => Label::THREAD_ROOM
+                    'type'      => new PostType(),
+                    'allow_add' => false,
+                    'data'      => array(new Post())
                 )
             );
+
     }
     
     /**

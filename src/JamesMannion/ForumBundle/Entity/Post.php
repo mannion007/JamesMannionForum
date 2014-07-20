@@ -9,6 +9,7 @@ use Doctrine\ORM\Mapping as ORM;
  *
  * @ORM\Table()
  * @ORM\Entity
+ * @ORM\HasLifecycleCallbacks()
  */
 class Post
 {
@@ -28,7 +29,7 @@ class Post
     private $author;
 
     /**
-     * @ORM\ManyToOne(targetEntity="Thread", inversedBy="posts")
+     * @ORM\ManyToOne(targetEntity="Thread", cascade={"persist"}))
      * @ORM\JoinColumn(name="thread_id", referencedColumnName="id")
      */
     private $thread;
@@ -39,6 +40,20 @@ class Post
      * @ORM\Column(name="primaryPost", type="boolean")
      */
     private $primaryPost = false;
+
+    /**
+     * @var \DateTime
+     *
+     * @ORM\Column(name="created", type="datetime")
+     */
+    private $created;
+
+    /**
+     * @var \DateTime
+     *
+     * @ORM\Column(name="updated", type="datetime", nullable=true)
+     */
+    private $updated;
 
     /**
      * @var string
@@ -141,5 +156,45 @@ class Post
     {
         return $this->primaryPost;
     }
+
+    /**
+     * @ORM\PrePersist
+     * @return $this
+     */
+    public function setCreated()
+    {
+        $this->created = new \DateTime();
+
+        return $this;
+    }
+
+    /**
+     * @return \DateTime
+     */
+    public function getCreated()
+    {
+        return $this->created;
+    }
+
+    /**
+     * @ORM\PreUpdate
+     * @return $this
+     */
+    public function setUpdated()
+    {
+        $this->updated = new \DateTime();
+
+        return $this;
+    }
+
+    /**
+     * @return \DateTime
+     */
+    public function getUpdated()
+    {
+        return $this->updated;
+    }
+
+
 
 }
