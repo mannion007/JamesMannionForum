@@ -8,14 +8,33 @@
 
     <p>{{ entity.description }}</p>
 
-    <h2>Threads in {{ title }}</h2>
+    <h3>Threads in {{ title }}</h3>
 
     {% if(threads|length > 0) %}
-        <ul>
+
+        <table class="table table-responsive table-striped">
+            <thead>
+            <tr>
+                <th>Title</th>
+                <th>Created</th>
+                <th>Updated</th>
+                <th>Author</th>
+                <th>Posts</th>
+            </tr>
+            </thead>
+            <tbody>
             {% for thread in threads %}
-                <li>{{ thread.title }}</li>
+                <tr>
+                    <td><a href="{{ path('thread_show', { 'threadId': thread.id }) }}">{{ thread.title }}</a></td>
+                    <td>{% if thread.created %}{{ thread.created|date('Y-m-d H:i:s') }}{% endif %}</td>
+                    <td>{% if thread.updated %}{{ thread.updated|date('Y-m-d H:i:s') }}{% endif %}</td>
+                    <td>{{ thread.author }}</td>
+                    <td>{{ thread.posts | length }}</td>
+                </tr>
             {% endfor %}
-        </ul>
+            </tbody>
+        </table>
+
     {% else %}
         <p>There are no threads in this room</p>
     {% endif %}
@@ -24,5 +43,4 @@
 
     <a href="{{ path('room') }}" class="btn btn-default">Back to the list</a>
 
-    {{ form(delete_form) }}
 {% endblock %}

@@ -5,10 +5,10 @@
 {% block contentTitle -%}{{ title }}{% endblock contentTitle -%}
 
 {% block body -%}
-    <p>Creating a thread in {{ room.name }}</p>
+    <p>Creating a thread</p>
     <a href="{{ path('thread') }}" class="btn btn-default">Back to list</a>
 
-    <form action="{{ path('thread_create', { 'roomId': room.id }) }}" method="post" >
+    <form action="{{ path('thread_create', { 'roomId': roomId }) }}" method="post" >
         {{ form_errors(form) }}
         {{ form_rest(form) }}
     </form>

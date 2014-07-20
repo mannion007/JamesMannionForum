@@ -2,19 +2,19 @@
 namespace Acme\HelloBundle\DataFixtures\ORM;
 
 use Doctrine\Common\DataFixtures\AbstractFixture;
-use Doctrine\Common\DataFixtures\FixtureInterface;
+use Doctrine\Common\DataFixtures\OrderedFixtureInterface;
 use Doctrine\Common\Persistence\ObjectManager;
 use JamesMannion\ForumBundle\Entity\Room;
 
 
-class RoomFixtures extends AbstractFixture implements FixtureInterface
+class RoomFixtures extends AbstractFixture implements OrderedFixtureInterface
 {
 
     private $order = 1;
 
     public function load(ObjectManager $manager)
     {
-        for($i=1; $i<12; $i++) {
+        for($i=1; $i<=12; $i++) {
 
             $room = new Room();
             $room->setName('My Lovely Room #' . $i);

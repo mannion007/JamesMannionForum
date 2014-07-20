@@ -5,5 +5,9 @@
 
     <a href="{{ path('post') }}" class="btn btn-default">Back to list</a>
 
-    {{ form(form) }}
+    <form action="{{ path('post_create', { 'threadId': threadId }) }}" method="post" >
+        {{ form_errors(form) }}
+        {{ form_rest(form) }}
+    </form>
+
 {% endblock %}

@@ -3,7 +3,7 @@ thread:
     defaults: { _controller: "JamesMannionForumBundle:Thread:index" }
 
 thread_show:
-    path:     /{id}/show
+    path:     /{threadId}/show
     defaults: { _controller: "JamesMannionForumBundle:Thread:show" }
 
 thread_new:

@@ -1,37 +1,27 @@
 {% extends '::base.html.twig' %}
 
-{% block body -%}
-    <h1>Thread</h1>
+{% block pageTitle -%}{{ systemName }} | {{ title }}{% endblock pageTitle -%}
 
-    <table class="table table-responsive table-striped">
-        <tbody>
-            <tr>
-                <th>Id</th>
-                <td>{{ entity.id }}</td>
-            </tr>
-            <tr>
-                <th>Title</th>
-                <td>{{ entity.title }}</td>
-            </tr>
-            <tr>
-                <th>Created</th>
-                <td>{{ entity.created|date('Y-m-d H:i:s') }}</td>
-            </tr>
-            <tr>
-                <th>Updated</th>
-                <td>{{ entity.updated|date('Y-m-d H:i:s') }}</td>
-            </tr>
-            <tr>
-                <th>Author</th>
-                <td>{{ entity.author }}</td>
-            </tr>
-        </tbody>
-    </table>
+{% block contentTitle -%}{{ title }}{% endblock contentTitle -%}
+
+{% block body -%}
+
+    <p>{{ thread.title }}</p>
+
+    <h3>Posts in {{ title }}</h3>
+
+    {% if(posts|length > 0) %}
+        <ul>
+            {% for post in posts %}
+                <li>{{ post.body }}</li>
+            {% endfor %}
+        </ul>
+    {% else %}
+        <p>There are no posts in this thread</p>
+    {% endif %}
+
+    <a href="{{ path('post_new', { 'threadId': thread.id }) }}" class="btn btn-primary">Create a new Post</a>
 
     <a href="{{ path('thread') }}" class="btn btn-default">Back to the list</a>
-
-    <a href="{{ path('thread_edit', { 'id': entity.id }) }}" class="btn btn-default">Edit</a>
-
-    {{ form(delete_form) }}
 
 {% endblock %}

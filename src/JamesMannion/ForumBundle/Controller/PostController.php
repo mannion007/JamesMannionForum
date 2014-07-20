@@ -5,6 +5,7 @@ namespace JamesMannion\ForumBundle\Controller;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use JamesMannion\ForumBundle\Entity\Post;
+use JamesMannion\ForumBundle\Entity\Thread;
 use JamesMannion\ForumBundle\Form\PostType;
 use JamesMannion\ForumBundle\Constants\Config;
 use JamesMannion\ForumBundle\Constants\Title;
@@ -29,38 +30,46 @@ class PostController extends Controller
     }
 
     /**
+     * @param $threadId
      * @param Request $request
      * @return \Symfony\Component\HttpFoundation\RedirectResponse|\Symfony\Component\HttpFoundation\Response
      */
-    public function createAction(Request $request)
+    public function createAction($threadId, Request $request)
     {
-        $entity = new Post();
-        $entity->setAuthor($this->getUser());
-        $form = $this->createCreateForm($entity);
+        $postToCreate = new Post();
+
+        $form = $this->createCreateForm($threadId, $postToCreate);
         $form->handleRequest($request);
 
         if ($form->isValid()) {
             $em = $this->getDoctrine()->getManager();
-            $em->persist($entity);
+            /** @var Thread $thread */
+            $thread = $em->getRepository('JamesMannionForumBundle:Thread')->find($threadId);
+            $postToCreate->setThread($thread);
+            $postToCreate->setAuthor($this->getUser());
+
+            $em = $this->getDoctrine()->getManager();
+            $em->persist($postToCreate);
             $em->flush();
 
-            return $this->redirect($this->generateUrl('post_show', array('id' => $entity->getId())));
+            return $this->redirect($this->generateUrl('post_show', array('id' => $postToCreate->getId())));
         }
 
         return $this->render('JamesMannionForumBundle:Post:new.html.twig', array(
-            'entity' => $entity,
+            'post' => $postToCreate,
             'form'   => $form->createView(),
         ));
     }
 
     /**
+     * @param $threadId
      * @param Post $entity
      * @return \Symfony\Component\Form\Form
      */
-    private function createCreateForm(Post $entity)
+    private function createCreateForm($threadId, Post $entity)
     {
         $form = $this->createForm(new PostType(), $entity, array(
-            'action' => $this->generateUrl('post_create'),
+            'action' => $this->generateUrl('post_create', array('threadId' => $threadId)),
             'method' => 'POST',
         ));
 
@@ -70,16 +79,20 @@ class PostController extends Controller
     }
 
     /**
+     * @param $threadId
      * @return \Symfony\Component\HttpFoundation\Response
      */
-    public function newAction()
+    public function newAction($threadId)
     {
-        $entity = new Post();
-        $form   = $this->createCreateForm($entity);
+        $postToCreate = new Post();
+        $form = $this->createCreateForm($threadId, $postToCreate);
 
         return $this->render('JamesMannionForumBundle:Post:new.html.twig', array(
-            'entity' => $entity,
-            'form'   => $form->createView(),
+            'systemName'    => Config::SYSTEM_NAME,
+            'title'         => Title::POSTS_NEW,
+            'post'          => $postToCreate,
+            'threadId'      => $threadId,
+            'form'          => $form->createView(),
         ));
     }
 

@@ -14,8 +14,12 @@ class Title {
     const HOMEPAGE      = 'Welcome';
     const ENQUIRIES     = 'Contact Admin';
     const ROOMS_LIST    = 'Rooms';
+
     const THREADS_LIST  = 'Threads';
+    const THREADS_SHOW  = 'Thread';
     const THREADS_NEW   = 'Create a Thread';
+
     const POSTS_LIST    = 'Posts';
+    const POSTS_NEW     = 'Create a Post';
 
 } 

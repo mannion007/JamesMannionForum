@@ -119,15 +119,13 @@ class RoomController extends Controller
             throw $this->createNotFoundException('Unable to find Room entity.');
         }
 
-        $threads = $entity->getThreads();
-
         $deleteForm = $this->createDeleteForm($id);
 
         return $this->render('JamesMannionForumBundle:Room:show.html.twig', array(
             'systemName'    => Config::SYSTEM_NAME,
             'title'         => $entity->getName(),
             'entity'        => $entity,
-            'threads'       => $threads,
+            'threads'       => $entity->getThreads(),
             'delete_form'   => $deleteForm->createView(),
         ));
     }

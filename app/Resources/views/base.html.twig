@@ -42,30 +42,9 @@
                 <div class="container-fluid">
                     <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
                         <ul class="nav navbar-nav">
-                            <li class="dropdown">
-                                <a href="#" class="dropdown-toggle" data-toggle="dropdown">Rooms<span class="caret"></span></a>
-                                <ul class="dropdown-menu" role="menu">
-                                    <li><a href="{{ path('room') }}">Manage Rooms</a></li>
-                                    <li class="divider"></li>
-                                    <li><a href="{{ path('room_new') }}">Create Room</a></li>
-                                </ul>
-                            </li>
-                            <li class="dropdown">
-                                <a href="#" class="dropdown-toggle" data-toggle="dropdown">Threads<span class="caret"></span></a>
-                                <ul class="dropdown-menu" role="menu">
-                                    <li><a href="{{ path('thread') }}">Manage Threads</a></li>
-                                    <li class="divider"></li>
-                                    <li><a href="#">Create Thread</a></li>
-                                </ul>
-                            </li>
-                            <li class="dropdown">
-                                <a href="#" class="dropdown-toggle" data-toggle="dropdown">Posts<span class="caret"></span></a>
-                                <ul class="dropdown-menu" role="menu">
-                                    <li><a href="{{ path('post') }}">Manage Posts</a></li>
-                                    <li class="divider"></li>
-                                    <li><a href="{{ path('post_new') }}">Create Post</a></li>
-                                </ul>
-                            </li>
+                            <li><a href="{{ path('room') }}">Rooms</a></li>
+                            <li><a href="{{ path('thread') }}">Threads</a></li>
+                            <li><a href="{{ path('post') }}">Posts</a></li>
                             <li><a href="{{ path('enquiry') }}">Contact Admin</a></li>
                         </ul>
                     </div>
