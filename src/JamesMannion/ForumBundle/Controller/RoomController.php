@@ -19,13 +19,19 @@ class RoomController extends Controller
     public function indexAction()
     {
         $em = $this->getDoctrine()->getManager();
+        $roomsToShow = $em->getRepository('JamesMannionForumBundle:Room')->findAll();
 
-        $entities = $em->getRepository('JamesMannionForumBundle:Room')->findAll();
+        $paginator = $this->get('knp_paginator');
+        $pagination = $paginator->paginate(
+            $roomsToShow,
+            $this->get('request')->query->get('page', 1),
+            Config::ROOMS_PER_PAGE
+        );
 
         return $this->render('JamesMannionForumBundle:Room:index.html.twig', array(
             'systemName'    => Config::SYSTEM_NAME,
             'title'         => Title::ROOMS_LIST,
-            'entities'      => $entities,
+            'pagination'    => $pagination
         ));
     }
 
@@ -111,21 +117,28 @@ class RoomController extends Controller
     public function showAction($id)
     {
         $em = $this->getDoctrine()->getManager();
+        $roomToShow = $em->getRepository('JamesMannionForumBundle:Room')->find($id);
 
-        /** @var Room $entity */
-        $entity = $em->getRepository('JamesMannionForumBundle:Room')->find($id);
-
-        if (!$entity) {
+        if (!$roomToShow) {
             throw $this->createNotFoundException('Unable to find Room entity.');
         }
+
+        $threadsToShow = $roomToShow->getThreads();
+
+        $paginator = $this->get('knp_paginator');
+        $pagination = $paginator->paginate(
+            $threadsToShow,
+            $this->get('request')->query->get('page', 1),
+            Config::THREADS_PER_PAGE
+        );
 
         $deleteForm = $this->createDeleteForm($id);
 
         return $this->render('JamesMannionForumBundle:Room:show.html.twig', array(
             'systemName'    => Config::SYSTEM_NAME,
-            'title'         => $entity->getName(),
-            'entity'        => $entity,
-            'threads'       => $entity->getThreads(),
+            'title'         => $roomToShow->getName(),
+            'room'          => $roomToShow,
+            'pagination'    => $pagination,
             'delete_form'   => $deleteForm->createView(),
         ));
     }

@@ -6,11 +6,11 @@
 
 {% block body -%}
 
-    <p>{{ entity.description }}</p>
+    <p>{{ room.description }}</p>
 
-    <h3>Threads in {{ title }}</h3>
+    <h3>There are {{ pagination.getTotalItemCount }} Threads in {{ title }}</h3>
 
-    {% if(threads|length > 0) %}
+    {% if(pagination.getTotalItemCount > 0) %}
 
         <table class="table table-responsive table-striped">
             <thead>
@@ -23,7 +23,7 @@
             </tr>
             </thead>
             <tbody>
-            {% for thread in threads %}
+            {% for thread in pagination %}
                 <tr>
                     <td><a href="{{ path('thread_show', { 'threadId': thread.id }) }}">{{ thread.title }}</a></td>
                     <td>{% if thread.created %}{{ thread.created|date('Y-m-d H:i:s') }}{% endif %}</td>
@@ -39,8 +39,10 @@
         <p>There are no threads in this room</p>
     {% endif %}
 
-    <a href="{{ path('thread_new', { 'roomId': entity.id }) }}" class="btn btn-primary">Create a new Thread</a>
+    <a href="{{ path('thread_new', { 'roomId': room.id }) }}" class="btn btn-primary">Create a new Thread</a>
 
-    <a href="{{ path('room') }}" class="btn btn-default">Back to the list</a>
+    <div class="navigation">
+        {{ knp_pagination_render(pagination) }}
+    </div>
 
 {% endblock %}

@@ -13,4 +13,7 @@ class Config {
     const SYSTEM_NAME = 'My Lovely Forum';
     const MINIMUM_AGE = 18;
     const MAXIMUM_AGE = 100;
+
+    const ROOMS_PER_PAGE = 10;
+    const THREADS_PER_PAGE = 10;
 }

@@ -36,7 +36,8 @@
         "twbs/bootstrap": "3.0.*",
         "jquery/jquery":  "1.10.*",
         "doctrine/doctrine-fixtures-bundle": "dev-master",
-        "doctrine/data-fixtures" : "dev-master"
+        "doctrine/data-fixtures" : "dev-master",
+        "knplabs/knp-paginator-bundle": "~2.4"
     },
     "require-dev": {
         "sensio/generator-bundle": "~2.3"

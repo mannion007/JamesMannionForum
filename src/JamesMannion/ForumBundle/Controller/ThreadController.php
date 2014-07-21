@@ -65,7 +65,7 @@ class ThreadController extends Controller
                 $this->generateUrl(
                     'thread_show',
                     array(
-                        'id' => $threadToCreate->getId()
+                        'threadId' => $threadToCreate->getId()
                     )
                 )
             );
