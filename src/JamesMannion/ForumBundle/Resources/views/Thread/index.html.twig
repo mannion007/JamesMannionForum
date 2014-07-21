@@ -9,9 +9,9 @@
         <thead>
             <tr>
                 <th>Title</th>
+                <th>Author</th>
                 <th>Created</th>
                 <th>Updated</th>
-                <th>Author</th>
                 <th>Posts</th>
             </tr>
         </thead>
@@ -19,9 +19,10 @@
         {% for thread in threads %}
             <tr>
                 <td><a href="{{ path('thread_show', { 'threadId': thread.id }) }}">{{ thread.title }}</a></td>
+                <td>-</td>
                 <td>{% if thread.created %}{{ thread.created|date('Y-m-d H:i:s') }}{% endif %}</td>
                 <td>{% if thread.updated %}{{ thread.updated|date('Y-m-d H:i:s') }}{% endif %}</td>
-                <td>{{ thread.author }}</td>
+
                 <td>{{ thread.posts | length }}</td>
             </tr>
         {% endfor %}

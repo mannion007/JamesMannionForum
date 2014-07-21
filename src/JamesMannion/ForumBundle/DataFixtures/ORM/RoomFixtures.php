@@ -10,11 +10,11 @@ use JamesMannion\ForumBundle\Entity\Room;
 class RoomFixtures extends AbstractFixture implements OrderedFixtureInterface
 {
 
-    private $order = 1;
+    private $order = 2;
 
     public function load(ObjectManager $manager)
     {
-        for($i=1; $i<=12; $i++) {
+        for($i=0; $i<12; $i++) {
 
             $room = new Room();
             $room->setName('My Lovely Room #' . $i);

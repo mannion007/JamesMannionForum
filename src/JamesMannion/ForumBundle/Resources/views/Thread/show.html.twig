@@ -6,16 +6,25 @@
 
 {% block body -%}
 
-    <p>{{ thread.title }}</p>
-
-    <h3>Posts in {{ title }}</h3>
+    <h3>{{ thread.title }}</h3>
 
     {% if(posts|length > 0) %}
-        <ul>
+        <table class="table table-responsive table-striped">
+            <thead>
+            <tr>
+                <th>Author</th>
+                <th>Body</th>
+            </tr>
+            </thead>
+            <tbody>
             {% for post in posts %}
-                <li>{{ post.body }}</li>
+                <tr>
+                    <td>{{ post.author.username }}</td>
+                    <td>{{ post.body }}</td>
+                </tr>
             {% endfor %}
-        </ul>
+            </tbody>
+        </table>
     {% else %}
         <p>There are no posts in this thread</p>
     {% endif %}

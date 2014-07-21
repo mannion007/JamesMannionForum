@@ -30,7 +30,7 @@ class Post
 
     /**
      * @ORM\ManyToOne(targetEntity="Thread", cascade={"persist"}))
-     * @ORM\JoinColumn(name="thread_id", referencedColumnName="id")
+     * @ORM\JoinColumn(name="thread_id", referencedColumnName="id", nullable=false)
      */
     private $thread;
 
