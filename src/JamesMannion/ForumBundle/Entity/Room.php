@@ -25,7 +25,7 @@ class Room
 
     /**
      * @ORM\OneToMany(targetEntity="Thread", mappedBy="room")
-     * @OrderBy({"created" = "DESC"})
+     * @OrderBy({"updated" = "DESC"})
      */
     private $threads;
 

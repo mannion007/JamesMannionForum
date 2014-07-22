@@ -25,7 +25,7 @@
                 <td>{{ room.description }}</td>
                 <td>{{ room.threads | length }}</td>
                 <td>-</td>
-                <td>-</td>
+                <td>{{ room.threads|first.posts|last.author }}</td>
             </tr>
         {% endfor %}
         </tbody>

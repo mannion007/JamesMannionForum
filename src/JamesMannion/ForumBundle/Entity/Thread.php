@@ -36,6 +36,13 @@ class Thread
     protected $posts;
 
     /**
+     * @var integer
+     *
+     * @ORM\Column(name="views", type="integer")
+     */
+    protected $views = 0;
+
+    /**
      * @var string
      *
      * @ORM\Column(name="title", type="string", length=255)
@@ -126,6 +133,7 @@ class Thread
 
     /**
      * @return $this
+     * @ORM\PrePersist
      * @ORM\PreUpdate
      */
     public function setUpdated()
@@ -224,5 +232,30 @@ class Thread
     public function getPosts()
     {
         return $this->posts;
+    }
+
+    /**
+     * @param int $views
+     */
+    public function setViews($views)
+    {
+        $this->views = $views;
+    }
+
+    /**
+     * @return int
+     */
+    public function getViews()
+    {
+        return $this->views;
+    }
+
+    /**
+     * @return $this
+     */
+    public function addView()
+    {
+        $this->views ++;
+        return $this;
     }
 }

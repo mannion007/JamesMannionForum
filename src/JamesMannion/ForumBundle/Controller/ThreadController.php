@@ -26,14 +26,6 @@ class ThreadController extends Controller
         $em = $this->getDoctrine()->getManager();
         $threadsToShow = $em->getRepository('JamesMannionForumBundle:Thread')->findAll();
 
-        //$repository = $this->getDoctrine()->getRepository('JamesMannionForumBundle:Thread');
-
-//        $query = $repository->createQueryBuilder('t')
-//            ->orderBy('t.created', 'DESC')
-//            ->getQuery();
-
-        //$threadsToShow = $query->getResult();
-
         return $this->render('JamesMannionForumBundle:Thread:index.html.twig', array(
             'systemName'    => Config::SYSTEM_NAME,
             'title'         => Title::THREADS_LIST,
@@ -142,6 +134,10 @@ class ThreadController extends Controller
         if (!$threadToShow) {
             throw $this->createNotFoundException('Unable to find Thread entity.');
         }
+
+        $threadToShow->addView();
+        $em->persist($threadToShow);
+        $em->flush();
 
         $deleteForm = $this->createDeleteForm($threadId);
 

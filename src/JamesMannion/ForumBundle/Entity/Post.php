@@ -195,6 +195,11 @@ class Post
         return $this->updated;
     }
 
-
-
+    /**
+     * @ORM\PrePersist
+     */
+    public function updateThread()
+    {
+        $this->thread->setUpdated();
+    }
 }

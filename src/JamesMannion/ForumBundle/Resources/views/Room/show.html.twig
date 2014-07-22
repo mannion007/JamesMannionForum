@@ -16,20 +16,23 @@
             <thead>
             <tr>
                 <th>Title</th>
-                <th>Created</th>
-                <th>Updated</th>
                 <th>Author</th>
-                <th>Posts</th>
+                <th>Last Post</th>
+                <th>Replies</th>
+                <th>Views</th>
             </tr>
             </thead>
             <tbody>
             {% for thread in pagination %}
                 <tr>
                     <td><a href="{{ path('thread_show', { 'threadId': thread.id }) }}">{{ thread.title }}</a></td>
-                    <td>{% if thread.created %}{{ thread.created|date('Y-m-d H:i:s') }}{% endif %}</td>
-                    <td>{% if thread.updated %}{{ thread.updated|date('Y-m-d H:i:s') }}{% endif %}</td>
-                    <td>{{ thread.author }}</td>
-                    <td>{{ thread.posts | length }}</td>
+                    <td>{{ thread.posts|first.author.username }}</td>
+                    <td>
+                        {{ thread.posts|last.author.username }}
+                        {{ thread.updated|date('D M d, Y  H:i:s') }}
+                    </td>
+                    <td>{{ thread.posts | length -1}}</td>
+                    <td>{{ thread.views }}</td>
                 </tr>
             {% endfor %}
             </tbody>
