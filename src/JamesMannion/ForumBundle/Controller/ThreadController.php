@@ -2,8 +2,6 @@
 
 namespace JamesMannion\ForumBundle\Controller;
 
-use JamesMannion\ForumBundle\Constants\Exception;
-use JamesMannion\ForumBundle\Entity\Post;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use JamesMannion\ForumBundle\Entity\Thread;
@@ -11,6 +9,7 @@ use JamesMannion\ForumBundle\Entity\Room;
 use JamesMannion\ForumBundle\Form\ThreadType;
 use JamesMannion\ForumBundle\Constants\Config;
 use JamesMannion\ForumBundle\Constants\Title;
+use JamesMannion\ForumBundle\Constants\SuccessFlash;
 
 /**
  * Thread controller.
@@ -27,6 +26,14 @@ class ThreadController extends Controller
         $em = $this->getDoctrine()->getManager();
         $threadsToShow = $em->getRepository('JamesMannionForumBundle:Thread')->findAll();
 
+        //$repository = $this->getDoctrine()->getRepository('JamesMannionForumBundle:Thread');
+
+//        $query = $repository->createQueryBuilder('t')
+//            ->orderBy('t.created', 'DESC')
+//            ->getQuery();
+
+        //$threadsToShow = $query->getResult();
+
         return $this->render('JamesMannionForumBundle:Thread:index.html.twig', array(
             'systemName'    => Config::SYSTEM_NAME,
             'title'         => Title::THREADS_LIST,
@@ -42,14 +49,12 @@ class ThreadController extends Controller
      */
     public function createAction($roomId, Request $request)
     {
-
         $threadToCreate = new Thread();
 
         $form = $this->createCreateForm($roomId, $threadToCreate);
         $form->handleRequest($request);
 
         if ($form->isValid()) {
-
             $em = $this->getDoctrine()->getManager();
             /** @var Room $room */
             $room = $em->getRepository('JamesMannionForumBundle:Room')->find($roomId);
@@ -57,16 +62,23 @@ class ThreadController extends Controller
             $threadToCreate->setAuthor($this->getUser());
             $threadToCreate->setRoom($room);
 
+            $post = current(current($threadToCreate->getPosts()));
+
+            $post->setAuthor($this->getUser());
+
             $em = $this->getDoctrine()->getManager();
             $em->persist($threadToCreate);
             $em->flush();
 
+            $this->get('session')->getFlashBag()->add(
+                'success',
+                SuccessFlash::THREAD_CREATED_SUCCESSFULLY
+            );
+
             return $this->redirect(
                 $this->generateUrl(
-                    'thread_show',
-                    array(
-                        'threadId' => $threadToCreate->getId()
-                    )
+                    'room_show',
+                    array('roomId' => $room->getId())
                 )
             );
         }

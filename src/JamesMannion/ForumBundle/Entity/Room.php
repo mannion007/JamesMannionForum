@@ -4,6 +4,7 @@ namespace JamesMannion\ForumBundle\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
 use Doctrine\Common\Collections\ArrayCollection as ArrayCollection;
+use Doctrine\ORM\Mapping\OrderBy;
 
 /**
  * Room
@@ -24,8 +25,12 @@ class Room
 
     /**
      * @ORM\OneToMany(targetEntity="Thread", mappedBy="room")
+     * @OrderBy({"created" = "DESC"})
      */
     private $threads;
+
+
+    private $posts;
 
     /**
      * @var string

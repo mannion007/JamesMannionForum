@@ -14,14 +14,18 @@
                 <th>Name</th>
                 <th>Description</th>
                 <th>Threads</th>
+                <th>Posts</th>
+                <th>Last Post</th>
             </tr>
         </thead>
         <tbody>
-        {% for entity in pagination %}
+        {% for room in pagination %}
             <tr>
-                <td><a href="{{ path('room_show', { 'id': entity.id }) }}">{{ entity.name }}</a></td>
-                <td>{{ entity.description }}</td>
-                <td>{{ entity.threads | length }}</td>
+                <td><a href="{{ path('room_show', { 'roomId': room.id }) }}">{{ room.name }}</a></td>
+                <td>{{ room.description }}</td>
+                <td>{{ room.threads | length }}</td>
+                <td>-</td>
+                <td>-</td>
             </tr>
         {% endfor %}
         </tbody>

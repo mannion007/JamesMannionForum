@@ -110,14 +110,14 @@ class RoomController extends Controller
     }
 
     /**
-     * @param $id
+     * @param $roomId
      * @return \Symfony\Component\HttpFoundation\Response
      * @throws \Symfony\Component\HttpKernel\Exception\NotFoundHttpException
      */
-    public function showAction($id)
+    public function showAction($roomId)
     {
         $em = $this->getDoctrine()->getManager();
-        $roomToShow = $em->getRepository('JamesMannionForumBundle:Room')->find($id);
+        $roomToShow = $em->getRepository('JamesMannionForumBundle:Room')->find($roomId);
 
         if (!$roomToShow) {
             throw $this->createNotFoundException('Unable to find Room entity.');
@@ -132,7 +132,7 @@ class RoomController extends Controller
             Config::THREADS_PER_PAGE
         );
 
-        $deleteForm = $this->createDeleteForm($id);
+        $deleteForm = $this->createDeleteForm($roomId);
 
         return $this->render('JamesMannionForumBundle:Room:show.html.twig', array(
             'systemName'    => Config::SYSTEM_NAME,

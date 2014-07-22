@@ -2,6 +2,7 @@
 
 namespace JamesMannion\ForumBundle\Controller;
 
+use JamesMannion\ForumBundle\Constants\SuccessFlash;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use JamesMannion\ForumBundle\Entity\Post;
@@ -52,7 +53,17 @@ class PostController extends Controller
             $em->persist($postToCreate);
             $em->flush();
 
-            return $this->redirect($this->generateUrl('post_show', array('id' => $postToCreate->getId())));
+            $this->get('session')->getFlashBag()->add(
+                'success',
+                SuccessFlash::POST_CREATED_SUCCESSFULLY
+            );
+
+            return $this->redirect(
+                $this->generateUrl(
+                    'thread_show',
+                    array('threadId' => $thread->getId())
+                )
+            );
         }
 
         return $this->render('JamesMannionForumBundle:Post:new.html.twig', array(
@@ -105,16 +116,16 @@ class PostController extends Controller
     {
         $em = $this->getDoctrine()->getManager();
 
-        $entity = $em->getRepository('JamesMannionForumBundle:Post')->find($id);
+        $postToShow = $em->getRepository('JamesMannionForumBundle:Post')->find($id);
 
-        if (!$entity) {
+        if (!$postToShow) {
             throw $this->createNotFoundException('Unable to find Post entity.');
         }
 
         $deleteForm = $this->createDeleteForm($id);
 
         return $this->render('JamesMannionForumBundle:Post:show.html.twig', array(
-            'entity'      => $entity,
+            'post'      => $postToShow,
             'delete_form' => $deleteForm->createView(),
         ));
     }

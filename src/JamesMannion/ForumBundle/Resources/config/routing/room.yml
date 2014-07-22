@@ -3,7 +3,7 @@ room:
     defaults: { _controller: "JamesMannionForumBundle:Room:index" }
 
 room_show:
-    path:     /{id}/show
+    path:     /{roomId}/show
     defaults: { _controller: "JamesMannionForumBundle:Room:show" }
 
 room_new:
