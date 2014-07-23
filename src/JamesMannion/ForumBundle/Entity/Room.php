@@ -29,8 +29,11 @@ class Room
      */
     private $threads;
 
-
-    private $posts;
+    /**
+     * @ORM\ManyToOne(targetEntity="Building", cascade={"persist"}))
+     * @ORM\JoinColumn(name="building_id", referencedColumnName="id", nullable=true)
+     */
+    private $building;
 
     /**
      * @var string
@@ -141,5 +144,21 @@ class Room
     public function getThreads()
     {
         return $this->threads;
+    }
+
+    /**
+     * @param mixed $building
+     */
+    public function setBuilding($building)
+    {
+        $this->building = $building;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getBuilding()
+    {
+        return $this->building;
     }
 }

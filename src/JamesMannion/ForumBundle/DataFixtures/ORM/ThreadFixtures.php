@@ -10,7 +10,7 @@ use JamesMannion\ForumBundle\Entity\Thread;
 class ThreadFixtures extends AbstractFixture implements OrderedFixtureInterface
 {
 
-    private $order = 3;
+    private $order = 4;
 
     public function load(ObjectManager $manager)
     {

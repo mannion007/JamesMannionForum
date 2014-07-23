@@ -2,9 +2,9 @@ homepage:
     path:     /
     defaults: { _controller: JamesMannionForumBundle:Content:index }
 
-JamesMannionForumBundle_enquiries:
-    resource: "@JamesMannionForumBundle/Resources/config/routing/enquiry.yml"
-    prefix:   /enquiries
+JamesMannionForumBundle_building:
+    resource: "@JamesMannionForumBundle/Resources/config/routing/building.yml"
+    prefix:   /building
 
 JamesMannionForumBundle_room:
     resource: "@JamesMannionForumBundle/Resources/config/routing/room.yml"
