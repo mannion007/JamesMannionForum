@@ -14,6 +14,7 @@ class Config {
     const MINIMUM_AGE = 18;
     const MAXIMUM_AGE = 100;
 
+    const BUILDINGS_PER_PAGE = 10;
     const ROOMS_PER_PAGE = 10;
     const THREADS_PER_PAGE = 10;
 }

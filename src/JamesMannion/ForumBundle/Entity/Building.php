@@ -24,7 +24,7 @@ class Building
     /**
      * @ORM\OneToMany(targetEntity="Room", mappedBy="building", cascade={"persist"}))
      */
-    protected $posts;
+    protected $rooms;
 
     /**
      * @var string
@@ -56,6 +56,22 @@ class Building
     public function getId()
     {
         return $this->id;
+    }
+
+    /**
+     * @param mixed $rooms
+     */
+    public function setRooms($rooms)
+    {
+        $this->rooms = $rooms;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getRooms()
+    {
+        return $this->rooms;
     }
 
     /**

@@ -22,13 +22,15 @@ class ThreadFixtures extends AbstractFixture implements OrderedFixtureInterface
                 $thread->setTitle('My Lovely Thread #' . $count);
                 $thread->setRoom($this->getReference('room' . $i));
 
-                $post = new Post();
-                $post->setAuthor($this->getReference('user' . (rand(0,4))));
-                $post->setBody('Lorem ipsum dolor sit amet, consectetur adipiscing elit. Aenean congue,
-                libero sed aliquam dictum, leo arcu molestie ligula, hendrerit consectetur tellus felis at eros.
-                Integer vitae tellus euismod, vulputate leo id, mattis metus.');
-                $post->setPrimaryPost(true);
-                $thread->addPost($post);
+                for($k=0; $k<15; $k++) {
+                    $post = new Post();
+                    $post->setAuthor($this->getReference('user' . (rand(0,4))));
+                    $post->setBody('Lorem ipsum dolor sit amet, consectetur adipiscing elit. Aenean congue,
+                    libero sed aliquam dictum, leo arcu molestie ligula, hendrerit consectetur tellus felis at eros.
+                    Integer vitae tellus euismod, vulputate leo id, mattis metus.');
+                    $post->setPrimaryPost(true);
+                    $thread->addPost($post);
+                }
 
                 $manager->persist($thread);
                 $manager->flush();

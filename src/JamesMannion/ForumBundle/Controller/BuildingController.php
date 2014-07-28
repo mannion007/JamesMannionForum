@@ -4,9 +4,10 @@ namespace JamesMannion\ForumBundle\Controller;
 
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
-
+use JamesMannion\ForumBundle\Constants\Config;
 use JamesMannion\ForumBundle\Entity\Building;
 use JamesMannion\ForumBundle\Form\BuildingType;
+use JamesMannion\ForumBundle\Constants\Title;
 
 /**
  * Building controller.
@@ -22,11 +23,19 @@ class BuildingController extends Controller
     public function indexAction()
     {
         $em = $this->getDoctrine()->getManager();
+        $buildingsToShow = $em->getRepository('JamesMannionForumBundle:Building')->findAll();
 
-        $entities = $em->getRepository('JamesMannionForumBundle:Building')->findAll();
+        $paginator = $this->get('knp_paginator');
+        $pagination = $paginator->paginate(
+            $buildingsToShow,
+            $this->get('request')->query->get('page', 1),
+            Config::BUILDINGS_PER_PAGE
+        );
 
         return $this->render('JamesMannionForumBundle:Building:index.html.twig', array(
-            'entities' => $entities,
+            'systemName'    => Config::SYSTEM_NAME,
+            'title'         => Title::BUILDING_LIST,
+            'pagination'    => $pagination
         ));
     }
     /**

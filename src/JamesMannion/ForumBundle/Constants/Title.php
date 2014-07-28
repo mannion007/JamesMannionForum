@@ -22,4 +22,6 @@ class Title {
     const POSTS_LIST    = 'Posts';
     const POSTS_NEW     = 'Create a Post';
 
+    const BUILDING_LIST = 'Buildings';
+
 } 

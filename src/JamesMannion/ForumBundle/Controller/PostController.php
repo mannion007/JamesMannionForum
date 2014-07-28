@@ -21,12 +21,12 @@ class PostController extends Controller
     {
         $em = $this->getDoctrine()->getManager();
 
-        $entities = $em->getRepository('JamesMannionForumBundle:Post')->findAll();
+        $postsToShow = $em->getRepository('JamesMannionForumBundle:Post')->findAll();
 
         return $this->render('JamesMannionForumBundle:Post:index.html.twig', array(
             'systemName'    => Config::SYSTEM_NAME,
             'title'         => Title::POSTS_LIST,
-            'entities'      => $entities,
+            'posts'         => $postsToShow,
         ));
     }
 

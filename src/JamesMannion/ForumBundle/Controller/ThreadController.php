@@ -127,7 +127,6 @@ class ThreadController extends Controller
     public function showAction($threadId)
     {
         $em = $this->getDoctrine()->getManager();
-
         /** @var Thread $threadToShow */
         $threadToShow = $em->getRepository('JamesMannionForumBundle:Thread')->find($threadId);
 
@@ -139,14 +138,11 @@ class ThreadController extends Controller
         $em->persist($threadToShow);
         $em->flush();
 
-        $deleteForm = $this->createDeleteForm($threadId);
-
         return $this->render('JamesMannionForumBundle:Thread:show.html.twig', array(
             'systemName'    => Config::SYSTEM_NAME,
             'title'         => Title::THREADS_SHOW,
             'thread'        => $threadToShow,
             'posts'         => $threadToShow->getPosts(),
-            'delete_form'   => $deleteForm->createView(),
         ));
     }
 

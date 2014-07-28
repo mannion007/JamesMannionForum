@@ -134,7 +134,6 @@ class Thread
     /**
      * @return $this
      * @ORM\PrePersist
-     * @ORM\PreUpdate
      */
     public function setUpdated()
     {

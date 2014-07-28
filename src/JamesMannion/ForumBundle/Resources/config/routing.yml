@@ -1,10 +1,10 @@
 homepage:
     path:     /
-    defaults: { _controller: JamesMannionForumBundle:Content:index }
+    defaults: { _controller: JamesMannionForumBundle:Building:index }
 
 JamesMannionForumBundle_building:
     resource: "@JamesMannionForumBundle/Resources/config/routing/building.yml"
-    prefix:   /building
+    prefix:   /buildings
 
 JamesMannionForumBundle_room:
     resource: "@JamesMannionForumBundle/Resources/config/routing/room.yml"
