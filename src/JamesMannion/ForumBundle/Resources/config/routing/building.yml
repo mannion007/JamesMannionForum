@@ -1,0 +1,30 @@
+building:
+    path:     /
+    defaults: { _controller: "JamesMannionForumBundle:Building:index" }
+
+building_show:
+    path:     /{id}/show
+    defaults: { _controller: "JamesMannionForumBundle:Building:show" }
+
+building_new:
+    path:     /new
+    defaults: { _controller: "JamesMannionForumBundle:Building:new" }
+
+building_create:
+    path:     /create
+    defaults: { _controller: "JamesMannionForumBundle:Building:create" }
+    requirements: { _method: post }
+
+building_edit:
+    path:     /{id}/edit
+    defaults: { _controller: "JamesMannionForumBundle:Building:edit" }
+
+building_update:
+    path:     /{id}/update
+    defaults: { _controller: "JamesMannionForumBundle:Building:update" }
+    requirements: { _method: post|put }
+
+building_delete:
+    path:     /{id}/delete
+    defaults: { _controller: "JamesMannionForumBundle:Building:delete" }
+    requirements: { _method: post|delete }
