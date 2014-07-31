@@ -3,8 +3,8 @@
 {% block body -%}
 
     {% for building in pagination %}
-        <h3>{{ building.name }}</h3>
         {% if(building.rooms|length > 0) %}
+            <h3>{{ building.name }}</h3>
             <table class="table table-responsive table-striped">
                 <thead>
                 <tr>
