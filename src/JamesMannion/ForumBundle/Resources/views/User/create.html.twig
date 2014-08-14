@@ -1,0 +1,13 @@
+{% extends '::base.html.twig' %}
+
+{% block body -%}
+    <h1>Register</h1>
+    <p>Register an account with {{ appConfig.systemName }}</p>
+
+    <form id="userCreateForm" action="{{ path('JamesMannionForumBundle_userCreated') }}" method="post" {{ form_enctype(form) }}>
+        {{ form_errors(form) }}
+        {{ form(form) }}
+        {{ form_rest(form) }}
+    </form>
+
+{% endblock %}

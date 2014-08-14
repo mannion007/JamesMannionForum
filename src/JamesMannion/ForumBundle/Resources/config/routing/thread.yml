@@ -3,17 +3,17 @@ thread:
     defaults: { _controller: "JamesMannionForumBundle:Thread:index" }
 
 thread_show:
-    path:     /{threadId}/show
+    path:     /{id}/show
     defaults: { _controller: "JamesMannionForumBundle:Thread:show" }
 
 thread_new:
-    path:     /new/{roomId}
+    path:     /new/{id}
     defaults: { _controller: "JamesMannionForumBundle:Thread:new"}
     requirements:
         roomId: \d+
 
 thread_create:
-    path:     /create/{roomId}
+    path:     /create/{id}
     defaults: { _controller: "JamesMannionForumBundle:Thread:create" }
     requirements: { _method: post }
 

@@ -1,0 +1,26 @@
+{% block _authenticationLoginForm_username_row %}
+    {{ block('form_row_open') }}
+    {{ block('form_col_6') }}
+{% endblock %}
+
+{% block _authenticationLoginForm_username_widget %}
+    {% spaceless %}
+        {% set type = type|default('text') %}
+        {% set attr = attr|merge({'class': (attr.class|default('') ~ ' form-control')|trim}) %}
+        {% set full_name = '_username' %}
+        <input type="{{ type }}" {{ block('widget_attributes') }} {% if value is not empty %}value="{{ value }}" {% endif %}/>
+    {% endspaceless %}
+{% endblock %}
+
+{% block _authenticationLoginForm_password_row %}
+    {{ block('form_col_6') }}
+    {{ block('form_row_close') }}
+{% endblock %}
+
+{% block password_widget %}
+    {% spaceless %}
+        {% set type = type|default('password') %}
+        {% set full_name = '_password' %}
+        {{ block('form_widget_simple') }}
+    {% endspaceless %}
+{% endblock password_widget %}

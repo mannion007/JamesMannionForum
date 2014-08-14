@@ -3,12 +3,13 @@
 namespace JamesMannion\ForumBundle\Controller;
 
 use JamesMannion\ForumBundle\Constants\SuccessFlash;
+use JamesMannion\ForumBundle\Event\PostEvent;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use JamesMannion\ForumBundle\Entity\Post;
 use JamesMannion\ForumBundle\Entity\Thread;
 use JamesMannion\ForumBundle\Form\PostType;
-use JamesMannion\ForumBundle\Constants\Config;
+use JamesMannion\ForumBundle\Constants\AppConfig;
 use JamesMannion\ForumBundle\Constants\Title;
 
 class PostController extends Controller
@@ -20,32 +21,28 @@ class PostController extends Controller
     public function indexAction()
     {
         $em = $this->getDoctrine()->getManager();
-
         $postsToShow = $em->getRepository('JamesMannionForumBundle:Post')->findAll();
 
         return $this->render('JamesMannionForumBundle:Post:index.html.twig', array(
-            'systemName'    => Config::SYSTEM_NAME,
+            'systemName'    => AppConfig::SYSTEM_NAME,
             'title'         => Title::POSTS_LIST,
             'posts'         => $postsToShow,
         ));
     }
 
     /**
-     * @param $threadId
+     * @param Thread $thread
      * @param Request $request
      * @return \Symfony\Component\HttpFoundation\RedirectResponse|\Symfony\Component\HttpFoundation\Response
      */
-    public function createAction($threadId, Request $request)
+    public function createAction(Thread $thread, Request $request)
     {
         $postToCreate = new Post();
 
-        $form = $this->createCreateForm($threadId, $postToCreate);
+        $form = $this->createCreateForm($thread, $postToCreate);
         $form->handleRequest($request);
 
         if ($form->isValid()) {
-            $em = $this->getDoctrine()->getManager();
-            /** @var Thread $thread */
-            $thread = $em->getRepository('JamesMannionForumBundle:Thread')->find($threadId);
             $postToCreate->setThread($thread);
             $postToCreate->setAuthor($this->getUser());
 
@@ -58,14 +55,11 @@ class PostController extends Controller
                 SuccessFlash::POST_CREATED_SUCCESSFULLY
             );
 
-            return $this->redirect(
-                $this->generateUrl(
-                    'thread_show',
-                    array('threadId' => $thread->getId())
-                )
-            );
-        }
+            $dispatcher = $this->container->get('event_dispatcher');
+            $dispatcher->dispatch('onPostCreatedEvent', new PostEvent($postToCreate));
 
+            return $this->redirect($this->generateUrl('thread_show',array('id' => $thread->getId())));
+        }
         return $this->render('JamesMannionForumBundle:Post:new.html.twig', array(
             'post' => $postToCreate,
             'form'   => $form->createView(),
@@ -73,174 +67,133 @@ class PostController extends Controller
     }
 
     /**
-     * @param $threadId
-     * @param Post $entity
+     * @param Thread $threadToCreatePostIn
+     * @param Post $postToCreate
      * @return \Symfony\Component\Form\Form
      */
-    private function createCreateForm($threadId, Post $entity)
+    private function createCreateForm(Thread $threadToCreatePostIn, Post $postToCreate)
     {
-        $form = $this->createForm(new PostType(), $entity, array(
-            'action' => $this->generateUrl('post_create', array('threadId' => $threadId)),
+        $form = $this->createForm(new PostType(), $postToCreate, array(
+            'action' => $this->generateUrl('post_create', array('id' => $threadToCreatePostIn->getId())),
             'method' => 'POST',
         ));
-
         $form->add('submit', 'submit', array('label' => 'Create'));
-
         return $form;
     }
 
     /**
-     * @param $threadId
+     * @param Thread $threadToCreatePostIn
      * @return \Symfony\Component\HttpFoundation\Response
      */
-    public function newAction($threadId)
+    public function newAction(Thread $threadToCreatePostIn)
     {
         $postToCreate = new Post();
-        $form = $this->createCreateForm($threadId, $postToCreate);
-
+        $form = $this->createCreateForm($threadToCreatePostIn, $postToCreate);
         return $this->render('JamesMannionForumBundle:Post:new.html.twig', array(
-            'systemName'    => Config::SYSTEM_NAME,
+            'systemName'    => AppConfig::SYSTEM_NAME,
             'title'         => Title::POSTS_NEW,
             'post'          => $postToCreate,
-            'threadId'      => $threadId,
+            'thread'        => $threadToCreatePostIn,
             'form'          => $form->createView(),
         ));
     }
 
     /**
-     * @param $id
+     * @param Post $postToShow
      * @return \Symfony\Component\HttpFoundation\Response
      * @throws \Symfony\Component\HttpKernel\Exception\NotFoundHttpException
      */
-    public function showAction($id)
+    public function showAction(Post $postToShow)
     {
-        $em = $this->getDoctrine()->getManager();
-
-        $postToShow = $em->getRepository('JamesMannionForumBundle:Post')->find($id);
-
-        if (!$postToShow) {
-            throw $this->createNotFoundException('Unable to find Post entity.');
-        }
-
-        $deleteForm = $this->createDeleteForm($id);
-
+        $deleteForm = $this->createDeleteForm($postToShow);
         return $this->render('JamesMannionForumBundle:Post:show.html.twig', array(
-            'post'      => $postToShow,
-            'delete_form' => $deleteForm->createView(),
+            'post'          => $postToShow,
+            'delete_form'   => $deleteForm->createView(),
         ));
     }
 
     /**
-     * @param $id
+     * @param Post $postToEdit
      * @return \Symfony\Component\HttpFoundation\Response
-     * @throws \Symfony\Component\HttpKernel\Exception\NotFoundHttpException
      */
-    public function editAction($id)
+    public function editAction(Post $postToEdit)
     {
-        $em = $this->getDoctrine()->getManager();
-
-        $entity = $em->getRepository('JamesMannionForumBundle:Post')->find($id);
-
-        if (!$entity) {
-            throw $this->createNotFoundException('Unable to find Post entity.');
-        }
-
-        $editForm = $this->createEditForm($entity);
-        $deleteForm = $this->createDeleteForm($id);
+        $editForm = $this->createEditForm($postToEdit);
+        $deleteForm = $this->createDeleteForm($postToEdit);
 
         return $this->render('JamesMannionForumBundle:Post:edit.html.twig', array(
-            'entity'      => $entity,
-            'edit_form'   => $editForm->createView(),
-            'delete_form' => $deleteForm->createView(),
+            'post'          => $postToEdit,
+            'edit_form'     => $editForm->createView(),
+            'delete_form'   => $deleteForm->createView(),
         ));
     }
 
     /**
-     * @param Post $entity
+     * @param Post $post
      * @return \Symfony\Component\Form\Form
      */
-    private function createEditForm(Post $entity)
+    private function createEditForm(Post $post)
     {
-        $form = $this->createForm(new PostType(), $entity, array(
-            'action' => $this->generateUrl('post_update', array('id' => $entity->getId())),
+        $form = $this->createForm(new PostType(), $post, array(
+            'action' => $this->generateUrl('post_update', array('id' => $post->getId())),
             'method' => 'PUT',
         ));
-
         $form->add('submit', 'submit', array('label' => 'Update'));
-
         return $form;
     }
 
     /**
      * @param Request $request
-     * @param $id
+     * @param Post $post
      * @return \Symfony\Component\HttpFoundation\RedirectResponse|\Symfony\Component\HttpFoundation\Response
      * @throws \Symfony\Component\HttpKernel\Exception\NotFoundHttpException
      */
-    public function updateAction(Request $request, $id)
+    public function updateAction(Request $request, Post $post)
     {
-        $em = $this->getDoctrine()->getManager();
-
-        $entity = $em->getRepository('JamesMannionForumBundle:Post')->find($id);
-
-        if (!$entity) {
-            throw $this->createNotFoundException('Unable to find Post entity.');
-        }
-
-        $deleteForm = $this->createDeleteForm($id);
-        $editForm = $this->createEditForm($entity);
+        $deleteForm = $this->createDeleteForm($post);
+        $editForm = $this->createEditForm($post);
         $editForm->handleRequest($request);
 
         if ($editForm->isValid()) {
+            $em = $this->getDoctrine()->getManager();
             $em->flush();
-
-            return $this->redirect($this->generateUrl('post_edit', array('id' => $id)));
+            return $this->redirect($this->generateUrl('post_edit', array('id' => $post->getId())));
         }
 
         return $this->render('JamesMannionForumBundle:Post:edit.html.twig', array(
-            'entity'      => $entity,
-            'edit_form'   => $editForm->createView(),
-            'delete_form' => $deleteForm->createView(),
+            'post'          => $post,
+            'edit_form'     => $editForm->createView(),
+            'delete_form'   => $deleteForm->createView(),
         ));
     }
 
     /**
      * @param Request $request
-     * @param $id
+     * @param $postToDelete
      * @return \Symfony\Component\HttpFoundation\RedirectResponse
-     * @throws \Symfony\Component\HttpKernel\Exception\NotFoundHttpException
      */
-    public function deleteAction(Request $request, $id)
+    public function deleteAction(Request $request, $postToDelete)
     {
-        $form = $this->createDeleteForm($id);
+        $form = $this->createDeleteForm($postToDelete);
         $form->handleRequest($request);
-
         if ($form->isValid()) {
             $em = $this->getDoctrine()->getManager();
-            $entity = $em->getRepository('JamesMannionForumBundle:Post')->find($id);
-
-            if (!$entity) {
-                throw $this->createNotFoundException('Unable to find Post entity.');
-            }
-
-            $em->remove($entity);
+            $em->remove($postToDelete);
             $em->flush();
         }
-
         return $this->redirect($this->generateUrl('post'));
     }
 
     /**
-     * @param $id
+     * @param Post $postToDelete
      * @return \Symfony\Component\Form\Form
      */
-    private function createDeleteForm($id)
+    private function createDeleteForm(Post $postToDelete)
     {
         return $this->createFormBuilder()
-            ->setAction($this->generateUrl('post_delete', array('id' => $id)))
+            ->setAction($this->generateUrl('post_delete', array('id' => $postToDelete->getId())))
             ->setMethod('DELETE')
             ->add('submit', 'submit', array('label' => 'Delete'))
-            ->getForm()
-        ;
+            ->getForm();
     }
 }

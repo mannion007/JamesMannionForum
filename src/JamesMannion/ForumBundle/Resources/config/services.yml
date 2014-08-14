@@ -1,9 +1,38 @@
 parameters:
-#    james_mannion_forum.example.class: JamesMannion\ForumBundle\Example
+    webservice_user_provider.class: JamesMannion\ForumBundle\Security\User\ForumUser
 
 services:
-    acme_user.registration.form.type:
-        class: JamesMannion\ForumBundle\Form\Type\RegistrationFormType
-        arguments: [%fos_user.model.user.class%]
+    authentication_handler:
+        class: JamesMannion\ForumBundle\Handler\AuthenticationHandler
+        calls:
+            - [ setContainer, [ @service_container ] ]
+
+    post_listener:
+        class: JamesMannion\ForumBundle\EventListener\PostListener
+        arguments:
+            mailer: "@mailer"
         tags:
-            - { name: form.type, alias: forum_user_registration }
+            - { name: kernel.event_listener, event: postCreated, method: onPostCreatedEvent }
+
+    user_listener:
+        class: JamesMannion\ForumBundle\EventListener\UserListener
+        arguments:
+            mailer: "@mailer"
+        tags:
+            - { name: kernel.event_listener, event: userRegistered, method: onUserRegisteredEvent }
+
+    post_manager:
+        class: JamesMannion\ForumBundle\Entity\PostManager
+        arguments:
+            em: "@doctrine.orm.entity_manager"
+            class: FooVendorBarBundleEntityComment
+
+    base_manager:
+        abstract: true
+        calls:
+            - [setEntityManager, ["@doctrine.orm.entity_manager"]]
+
+    post_manager:
+        class: JamesMannion\ForumBundle\Manager\PostManager
+        arguments: ["JamesMannionForumBundle\Entity\Post"]
+        parent: base_manager

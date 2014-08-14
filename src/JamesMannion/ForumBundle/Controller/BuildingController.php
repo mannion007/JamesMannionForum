@@ -4,155 +4,126 @@ namespace JamesMannion\ForumBundle\Controller;
 
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
-use JamesMannion\ForumBundle\Constants\Config;
+use JamesMannion\ForumBundle\Constants\AppConfig;
 use JamesMannion\ForumBundle\Entity\Building;
 use JamesMannion\ForumBundle\Form\BuildingType;
 use JamesMannion\ForumBundle\Constants\Title;
 
-/**
- * Building controller.
- *
- */
 class BuildingController extends Controller
 {
 
     /**
-     * Lists all Building entities.
-     *
+     * @return \Symfony\Component\HttpFoundation\Response
      */
     public function indexAction()
     {
         $em = $this->getDoctrine()->getManager();
         $buildingsToShow = $em->getRepository('JamesMannionForumBundle:Building')->findAll();
 
-        $paginator = $this->get('knp_paginator');
-        $pagination = $paginator->paginate(
-            $buildingsToShow,
-            $this->get('request')->query->get('page', 1),
-            Config::BUILDINGS_PER_PAGE
-        );
+//        $paginator = $this->get('knp_paginator');
+//        $pagination = $paginator->paginate(
+//            $buildingsToShow,
+//            $this->get('request')->query->get('page', 1),
+//            AppConfig::BUILDINGS_PER_PAGE
+//        );
 
         return $this->render('JamesMannionForumBundle:Building:index.html.twig', array(
-            'systemName'    => Config::SYSTEM_NAME,
+            'systemName'    => AppConfig::SYSTEM_NAME,
             'title'         => Title::BUILDING_LIST,
-            'pagination'    => $pagination
+            'buildings'     => $buildingsToShow
         ));
     }
+
     /**
-     * Creates a new Building entity.
-     *
+     * @param Request $request
+     * @return \Symfony\Component\HttpFoundation\RedirectResponse|\Symfony\Component\HttpFoundation\Response
      */
     public function createAction(Request $request)
     {
-        $entity = new Building();
-        $form = $this->createCreateForm($entity);
+        $buildingToCreate = new Building();
+        $form = $this->createCreateForm($buildingToCreate);
         $form->handleRequest($request);
 
         if ($form->isValid()) {
             $em = $this->getDoctrine()->getManager();
-            $em->persist($entity);
+            $em->persist($buildingToCreate);
             $em->flush();
-
-            return $this->redirect($this->generateUrl('building_show', array('id' => $entity->getId())));
+            return $this->redirect($this->generateUrl('building_show', array('id' => $buildingToCreate->getId())));
         }
 
         return $this->render('JamesMannionForumBundle:Building:new.html.twig', array(
-            'entity' => $entity,
-            'form'   => $form->createView(),
+            'building'  => $buildingToCreate,
+            'form'      => $form->createView(),
         ));
     }
 
     /**
-     * Creates a form to create a Building entity.
-     *
-     * @param Building $entity The entity
-     *
-     * @return \Symfony\Component\Form\Form The form
+     * @param Building $buildingToCreate
+     * @return \Symfony\Component\Form\Form
      */
-    private function createCreateForm(Building $entity)
+    private function createCreateForm(Building $buildingToCreate)
     {
-        $form = $this->createForm(new BuildingType(), $entity, array(
+        $form = $this->createForm(new BuildingType(), $buildingToCreate, array(
             'action' => $this->generateUrl('building_create'),
             'method' => 'POST',
         ));
-
         $form->add('submit', 'submit', array('label' => 'Create'));
-
         return $form;
     }
 
     /**
-     * Displays a form to create a new Building entity.
-     *
+     * @return \Symfony\Component\HttpFoundation\Response
      */
     public function newAction()
     {
-        $entity = new Building();
-        $form   = $this->createCreateForm($entity);
+        $buildingToCreate = new Building();
+        $form   = $this->createCreateForm($buildingToCreate);
 
         return $this->render('JamesMannionForumBundle:Building:new.html.twig', array(
-            'entity' => $entity,
-            'form'   => $form->createView(),
+            'building'  => $buildingToCreate,
+            'form'      => $form->createView(),
         ));
     }
 
     /**
-     * Finds and displays a Building entity.
-     *
+     * @param Building $buildingToShow
+     * @return \Symfony\Component\HttpFoundation\Response
+     * @throws \Symfony\Component\HttpKernel\Exception\NotFoundHttpException
      */
-    public function showAction($id)
+    public function showAction(Building $buildingToShow)
     {
-        $em = $this->getDoctrine()->getManager();
-
-        $entity = $em->getRepository('JamesMannionForumBundle:Building')->find($id);
-
-        if (!$entity) {
-            throw $this->createNotFoundException('Unable to find Building entity.');
-        }
-
-        $deleteForm = $this->createDeleteForm($id);
+        $deleteForm = $this->createDeleteForm($buildingToShow);
 
         return $this->render('JamesMannionForumBundle:Building:show.html.twig', array(
-            'entity'      => $entity,
-            'delete_form' => $deleteForm->createView(),
+            'building'      => $buildingToShow,
+            'delete_form'   => $deleteForm->createView(),
         ));
     }
 
     /**
-     * Displays a form to edit an existing Building entity.
-     *
+     * @param $buildingToEdit
+     * @return \Symfony\Component\HttpFoundation\Response
      */
-    public function editAction($id)
+    public function editAction(Building $buildingToEdit)
     {
-        $em = $this->getDoctrine()->getManager();
-
-        $entity = $em->getRepository('JamesMannionForumBundle:Building')->find($id);
-
-        if (!$entity) {
-            throw $this->createNotFoundException('Unable to find Building entity.');
-        }
-
-        $editForm = $this->createEditForm($entity);
-        $deleteForm = $this->createDeleteForm($id);
+        $editForm = $this->createEditForm($buildingToEdit);
+        $deleteForm = $this->createDeleteForm($buildingToEdit);
 
         return $this->render('JamesMannionForumBundle:Building:edit.html.twig', array(
-            'entity'      => $entity,
-            'edit_form'   => $editForm->createView(),
-            'delete_form' => $deleteForm->createView(),
+            'building'      => $buildingToEdit,
+            'edit_form'     => $editForm->createView(),
+            'delete_form'   => $deleteForm->createView(),
         ));
     }
 
     /**
-    * Creates a form to edit a Building entity.
-    *
-    * @param Building $entity The entity
-    *
-    * @return \Symfony\Component\Form\Form The form
-    */
-    private function createEditForm(Building $entity)
+     * @param Building $buildingToCreate
+     * @return \Symfony\Component\Form\Form
+     */
+    private function createEditForm(Building $buildingToCreate)
     {
-        $form = $this->createForm(new BuildingType(), $entity, array(
-            'action' => $this->generateUrl('building_update', array('id' => $entity->getId())),
+        $form = $this->createForm(new BuildingType(), $buildingToCreate, array(
+            'action' => $this->generateUrl('building_update', array('id' => $buildingToCreate->getId())),
             'method' => 'PUT',
         ));
 
@@ -160,54 +131,45 @@ class BuildingController extends Controller
 
         return $form;
     }
+
     /**
-     * Edits an existing Building entity.
-     *
+     * @param Request $request
+     * @param $buildingToUpdate
+     * @return \Symfony\Component\HttpFoundation\RedirectResponse|\Symfony\Component\HttpFoundation\Response
+     * @throws \Symfony\Component\HttpKernel\Exception\NotFoundHttpException
      */
-    public function updateAction(Request $request, $id)
+    public function updateAction(Request $request, Building $buildingToUpdate)
     {
-        $em = $this->getDoctrine()->getManager();
-
-        $entity = $em->getRepository('JamesMannionForumBundle:Building')->find($id);
-
-        if (!$entity) {
-            throw $this->createNotFoundException('Unable to find Building entity.');
-        }
-
-        $deleteForm = $this->createDeleteForm($id);
-        $editForm = $this->createEditForm($entity);
+        $deleteForm = $this->createDeleteForm($buildingToUpdate);
+        $editForm = $this->createEditForm($buildingToUpdate);
         $editForm->handleRequest($request);
 
         if ($editForm->isValid()) {
+            $em = $this->getDoctrine()->getManager();
             $em->flush();
-
-            return $this->redirect($this->generateUrl('building_edit', array('id' => $id)));
+            return $this->redirect($this->generateUrl('building_edit', array('id' => $buildingToUpdate->getId())));
         }
 
         return $this->render('JamesMannionForumBundle:Building:edit.html.twig', array(
-            'entity'      => $entity,
+            'building'    => $buildingToUpdate,
             'edit_form'   => $editForm->createView(),
             'delete_form' => $deleteForm->createView(),
         ));
     }
+
     /**
-     * Deletes a Building entity.
-     *
+     * @param Request $request
+     * @param Building $buildingToDelete
+     * @return \Symfony\Component\HttpFoundation\RedirectResponse
      */
-    public function deleteAction(Request $request, $id)
+    public function deleteAction(Request $request, Building $buildingToDelete)
     {
-        $form = $this->createDeleteForm($id);
+        $form = $this->createDeleteForm($buildingToDelete);
         $form->handleRequest($request);
 
         if ($form->isValid()) {
             $em = $this->getDoctrine()->getManager();
-            $entity = $em->getRepository('JamesMannionForumBundle:Building')->find($id);
-
-            if (!$entity) {
-                throw $this->createNotFoundException('Unable to find Building entity.');
-            }
-
-            $em->remove($entity);
+            $em->remove($buildingToDelete);
             $em->flush();
         }
 
@@ -215,19 +177,15 @@ class BuildingController extends Controller
     }
 
     /**
-     * Creates a form to delete a Building entity by id.
-     *
-     * @param mixed $id The entity id
-     *
-     * @return \Symfony\Component\Form\Form The form
+     * @param Building $buildingToDelete
+     * @return \Symfony\Component\Form\Form
      */
-    private function createDeleteForm($id)
+    private function createDeleteForm(Building $buildingToDelete)
     {
         return $this->createFormBuilder()
-            ->setAction($this->generateUrl('building_delete', array('id' => $id)))
+            ->setAction($this->generateUrl('building_delete', array('id' => $buildingToDelete->getId())))
             ->setMethod('DELETE')
             ->add('submit', 'submit', array('label' => 'Delete'))
-            ->getForm()
-        ;
+            ->getForm();
     }
 }

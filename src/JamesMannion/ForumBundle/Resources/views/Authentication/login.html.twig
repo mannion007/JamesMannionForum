@@ -1,0 +1,21 @@
+{% extends '::base.html.twig' %}
+
+{% block body %}
+    {% if error %}
+        <div class="alert alert-danger">
+            <p>{{ error.message | replace({
+                "Bad credentials": "Invalid username/password combination."
+                }) }}</p>
+        </div>
+    {% endif %}
+
+    {% form_theme form 'JamesMannionForumBundle:Form:Authentication/loginFormTheme.html.twig' %}
+
+    <h1>Login</h1>
+
+    <form action="{{ path('JamesMannionForumBundle_check') }}" method="post">
+        {{ form_errors(form) }}
+        {{ form_rest(form) }}
+        <p><a href="#">Forgotten your password?</a></p>
+    </form>
+{% endblock %}

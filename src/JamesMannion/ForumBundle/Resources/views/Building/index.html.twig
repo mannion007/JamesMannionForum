@@ -2,7 +2,7 @@
 
 {% block body -%}
 
-    {% for building in pagination %}
+    {% for building in buildings %}
         {% if(building.rooms|length > 0) %}
             <h3>{{ building.name }}</h3>
             <table class="table table-responsive table-striped">
@@ -18,7 +18,7 @@
                 <tbody>
                 {% for room in building.rooms %}
                     <tr>
-                        <td><a href="{{ path('room_show', { 'roomId': room.id }) }}">{{ room.name }}</a></td>
+                        <td><a href="{{ path('room_show', { 'id': room.id }) }}">{{ room.name }}</a></td>
                         <td>{{ room.description }}</td>
                         <td>{{ room.threads | length }}</td>
                         <td>-</td>
@@ -29,9 +29,5 @@
             </table>
         {% endif %}
     {% endfor %}
-
-    <div class="navigation">
-        {{ knp_pagination_render(pagination) }}
-    </div>
 
 {% endblock %}

@@ -1,4 +1,4 @@
-homepage:
+JamesMannionForumBundle_homepage:
     path:     /
     defaults: { _controller: JamesMannionForumBundle:Building:index }
 
@@ -17,3 +17,28 @@ JamesMannionForumBundle_thread:
 JamesMannionForumBundle_post:
     resource: "@JamesMannionForumBundle/Resources/config/routing/post.yml"
     prefix:   /posts
+
+JamesMannionForumBundle_user:
+    resource: "@JamesMannionForumBundle/Resources/config/routing/user.yml"
+    prefix:   /user
+
+
+### USER ROUTES ###
+
+### AUTHENTICATION CHECK ###
+
+JamesMannionForumBundle_login:
+    pattern: /login
+    defaults: { _controller: JamesMannionForumBundle:Authentication:login }
+    requirements:
+        _method: GET
+
+JamesMannionForumBundle_check:
+    pattern: /system/login_check
+    requirements:
+        _method: POST
+
+JamesMannionForumBundle_logout:
+    pattern: /system/logout
+    requirements:
+        _method: GET

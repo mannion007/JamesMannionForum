@@ -1,0 +1,11 @@
+JamesMannionForumBundle_userCreate:
+    pattern:  /register
+    defaults: { _controller: JamesMannionForumBundle:User:create }
+    requirements:
+        _method: GET
+
+JamesMannionForumBundle_userCreated:
+    pattern:  /register-success
+    defaults: { _controller: JamesMannionForumBundle:User:create }
+    requirements:
+        _method: POST

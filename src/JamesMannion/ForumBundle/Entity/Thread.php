@@ -36,6 +36,12 @@ class Thread
     protected $posts;
 
     /**
+     * @ORM\ManyToMany(targetEntity="User", mappedBy="threadsWatching")
+     *
+     **/
+    protected $watchers;
+
+    /**
      * @var integer
      *
      * @ORM\Column(name="views", type="integer")
@@ -231,6 +237,22 @@ class Thread
     public function getPosts()
     {
         return $this->posts;
+    }
+
+    /**
+     * @param mixed $watchers
+     */
+    public function setWatchers($watchers)
+    {
+        $this->watchers = $watchers;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getWatchers()
+    {
+        return $this->watchers;
     }
 
     /**

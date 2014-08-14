@@ -7,13 +7,13 @@ post_show:
     defaults: { _controller: "JamesMannionForumBundle:Post:show" }
 
 post_new:
-    path:     /new/{threadId}
+    path:     /new/{id}
     defaults: { _controller: "JamesMannionForumBundle:Post:new" }
     requirements:
         roomId: \d+
 
 post_create:
-    path:     /create/{threadId}
+    path:     /create/{id}
     defaults: { _controller: "JamesMannionForumBundle:Post:create" }
     requirements: { _method: post }
 

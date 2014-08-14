@@ -7,14 +7,10 @@ use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use JamesMannion\ForumBundle\Entity\Thread;
 use JamesMannion\ForumBundle\Entity\Room;
 use JamesMannion\ForumBundle\Form\ThreadType;
-use JamesMannion\ForumBundle\Constants\Config;
+use JamesMannion\ForumBundle\Constants\AppConfig;
 use JamesMannion\ForumBundle\Constants\Title;
 use JamesMannion\ForumBundle\Constants\SuccessFlash;
 
-/**
- * Thread controller.
- *
- */
 class ThreadController extends Controller
 {
 
@@ -25,37 +21,31 @@ class ThreadController extends Controller
     {
         $em = $this->getDoctrine()->getManager();
         $threadsToShow = $em->getRepository('JamesMannionForumBundle:Thread')->findAll();
-
         return $this->render('JamesMannionForumBundle:Thread:index.html.twig', array(
-            'systemName'    => Config::SYSTEM_NAME,
+            'systemName'    => AppConfig::SYSTEM_NAME,
             'title'         => Title::THREADS_LIST,
-            'threads'       => $threadsToShow,
+            'threads'       => $threadsToShow
         ));
     }
 
     /**
-     * @param $roomId
+     * @param Room $roomToCreateThreadIn
      * @param Request $request
      * @return \Symfony\Component\HttpFoundation\RedirectResponse|\Symfony\Component\HttpFoundation\Response
-     * @throws \Symfony\Component\HttpKernel\Exception\NotFoundHttpException
      */
-    public function createAction($roomId, Request $request)
+    public function createAction(Room $roomToCreateThreadIn, Request $request)
     {
         $threadToCreate = new Thread();
 
-        $form = $this->createCreateForm($roomId, $threadToCreate);
+        $form = $this->createCreateForm($roomToCreateThreadIn, $threadToCreate);
         $form->handleRequest($request);
 
         if ($form->isValid()) {
-            $em = $this->getDoctrine()->getManager();
-            /** @var Room $room */
-            $room = $em->getRepository('JamesMannionForumBundle:Room')->find($roomId);
 
             $threadToCreate->setAuthor($this->getUser());
-            $threadToCreate->setRoom($room);
+            $threadToCreate->setRoom($roomToCreateThreadIn);
 
             $post = current(current($threadToCreate->getPosts()));
-
             $post->setAuthor($this->getUser());
 
             $em = $this->getDoctrine()->getManager();
@@ -67,16 +57,11 @@ class ThreadController extends Controller
                 SuccessFlash::THREAD_CREATED_SUCCESSFULLY
             );
 
-            return $this->redirect(
-                $this->generateUrl(
-                    'room_show',
-                    array('roomId' => $room->getId())
-                )
-            );
+            return $this->redirect($this->generateUrl('room_show', array('id' => $roomToCreateThreadIn->getId())));
         }
 
         return $this->render('JamesMannionForumBundle:Thread:new.html.twig', array(
-            'systemName'    => Config::SYSTEM_NAME,
+            'systemName'    => AppConfig::SYSTEM_NAME,
             'title'         => Title::THREADS_NEW,
             'entity'        => $threadToCreate,
             'form'          => $form->createView(),
@@ -84,62 +69,51 @@ class ThreadController extends Controller
     }
 
     /**
-     * @param $roomId
-     * @param Thread $entity
+     * @param Room $roomToCreateThreadIn
+     * @param Thread $threadToCreate
      * @return \Symfony\Component\Form\Form
      */
-    private function createCreateForm($roomId, Thread $entity)
+    private function createCreateForm(Room $roomToCreateThreadIn, Thread $threadToCreate)
     {
-        $form = $this->createForm(new ThreadType(), $entity, array(
-            'action' => $this->generateUrl('thread_create', array('roomId' => $roomId)),
+        $form = $this->createForm(new ThreadType(), $threadToCreate, array(
+            'action' => $this->generateUrl('thread_create', array('id' => $roomToCreateThreadIn->getId())),
             'method' => 'POST',
         ));
-
         $form->add('submit', 'submit', array('label' => 'Create'));
-
         return $form;
     }
 
     /**
-     * @param $roomId
+     * @param Room $roomToCreateThreadIn
      * @return \Symfony\Component\HttpFoundation\Response
-     * @throws \Symfony\Component\HttpKernel\Exception\NotFoundHttpException
      */
-    public function newAction($roomId)
+    public function newAction(Room $roomToCreateThreadIn)
     {
         $threadToCreate = new Thread();
-        $form   = $this->createCreateForm($roomId, $threadToCreate);
-
+        $form   = $this->createCreateForm($roomToCreateThreadIn, $threadToCreate);
         return $this->render('JamesMannionForumBundle:Thread:new.html.twig', array(
-            'systemName'    => Config::SYSTEM_NAME,
+            'systemName'    => AppConfig::SYSTEM_NAME,
             'title'         => Title::THREADS_NEW,
             'thread'        => $threadToCreate,
-            'roomId'        => $roomId,
-            'form'          => $form->createView()
-        ));
+            'room'          => $roomToCreateThreadIn,
+            'form'          => $form->createView())
+        );
     }
 
     /**
-     * @param $threadId
+     * @param Thread $threadToShow
      * @return \Symfony\Component\HttpFoundation\Response
      * @throws \Symfony\Component\HttpKernel\Exception\NotFoundHttpException
      */
-    public function showAction($threadId)
+    public function showAction(Thread $threadToShow)
     {
-        $em = $this->getDoctrine()->getManager();
-        /** @var Thread $threadToShow */
-        $threadToShow = $em->getRepository('JamesMannionForumBundle:Thread')->find($threadId);
-
-        if (!$threadToShow) {
-            throw $this->createNotFoundException('Unable to find Thread entity.');
-        }
-
         $threadToShow->addView();
+        $em = $this->getDoctrine()->getManager();
         $em->persist($threadToShow);
         $em->flush();
 
         return $this->render('JamesMannionForumBundle:Thread:show.html.twig', array(
-            'systemName'    => Config::SYSTEM_NAME,
+            'systemName'    => AppConfig::SYSTEM_NAME,
             'title'         => Title::THREADS_SHOW,
             'thread'        => $threadToShow,
             'posts'         => $threadToShow->getPosts(),
@@ -147,95 +121,73 @@ class ThreadController extends Controller
     }
 
     /**
-     * Displays a form to edit an existing Thread entity.
-     *
+     * @param Thread $threadToEdit
+     * @return \Symfony\Component\HttpFoundation\Response
+     * @throws \Symfony\Component\HttpKernel\Exception\NotFoundHttpException
      */
-    public function editAction($id)
+    public function editAction(Thread $threadToEdit)
     {
-        $em = $this->getDoctrine()->getManager();
-
-        $entity = $em->getRepository('JamesMannionForumBundle:Thread')->find($id);
-
-        if (!$entity) {
-            throw $this->createNotFoundException('Unable to find Thread entity.');
-        }
-
-        $editForm = $this->createEditForm($entity);
-        $deleteForm = $this->createDeleteForm($id);
+        $editForm = $this->createEditForm($threadToEdit);
+        $deleteForm = $this->createDeleteForm($threadToEdit);
 
         return $this->render('JamesMannionForumBundle:Thread:edit.html.twig', array(
-            'entity'      => $entity,
+            'thread'      => $threadToEdit,
             'edit_form'   => $editForm->createView(),
             'delete_form' => $deleteForm->createView(),
         ));
     }
 
     /**
-    * Creates a form to edit a Thread entity.
-    *
-    * @param Thread $entity The entity
-    *
-    * @return \Symfony\Component\Form\Form The form
-    */
-    private function createEditForm(Thread $entity)
+     * @param Thread $threadToCreate
+     * @return \Symfony\Component\Form\Form
+     */
+    private function createEditForm(Thread $threadToCreate)
     {
-        $form = $this->createForm(new ThreadType(), $entity, array(
-            'action' => $this->generateUrl('thread_update', array('id' => $entity->getId())),
+        $form = $this->createForm(new ThreadType(), $threadToCreate, array(
+            'action' => $this->generateUrl('thread_update', array('id' => $threadToCreate->getId())),
             'method' => 'PUT',
         ));
-
         $form->add('submit', 'submit', array('label' => 'Update'));
-
         return $form;
     }
+
     /**
-     * Edits an existing Thread entity.
-     *
+     * @param Request $request
+     * @param Thread $threadToUpdate
+     * @return \Symfony\Component\HttpFoundation\RedirectResponse|\Symfony\Component\HttpFoundation\Response
      */
-    public function updateAction(Request $request, $id)
+    public function updateAction(Request $request, Thread $threadToUpdate)
     {
-        $em = $this->getDoctrine()->getManager();
-
-        $entity = $em->getRepository('JamesMannionForumBundle:Thread')->find($id);
-
-        if (!$entity) {
-            throw $this->createNotFoundException('Unable to find Thread entity.');
-        }
-
-        $deleteForm = $this->createDeleteForm($id);
-        $editForm = $this->createEditForm($entity);
+        $deleteForm = $this->createDeleteForm($threadToUpdate);
+        $editForm = $this->createEditForm($threadToUpdate);
         $editForm->handleRequest($request);
 
         if ($editForm->isValid()) {
+            $em = $this->getDoctrine()->getManager();
             $em->flush();
-
-            return $this->redirect($this->generateUrl('thread_edit', array('id' => $id)));
+            return $this->redirect($this->generateUrl('thread_edit', array('id' => $threadToUpdate->getId())));
         }
 
         return $this->render('JamesMannionForumBundle:Thread:edit.html.twig', array(
-            'entity'      => $entity,
+            'thread'      => $threadToUpdate,
             'edit_form'   => $editForm->createView(),
             'delete_form' => $deleteForm->createView(),
         ));
     }
+
     /**
-     * Deletes a Thread entity.
-     *
+     * @param Request $request
+     * @param Thread $threadToDelete
+     * @return \Symfony\Component\HttpFoundation\RedirectResponse
      */
-    public function deleteAction(Request $request, $id)
+    public function deleteAction(Request $request, Thread $threadToDelete)
     {
-        $form = $this->createDeleteForm($id);
+        $form = $this->createDeleteForm($threadToDelete);
         $form->handleRequest($request);
 
         if ($form->isValid()) {
             $em = $this->getDoctrine()->getManager();
-            $entity = $em->getRepository('JamesMannionForumBundle:Thread')->find($id);
-
-            if (!$entity) {
-                throw $this->createNotFoundException('Unable to find Thread entity.');
-            }
-
-            $em->remove($entity);
+            $em->remove($threadToDelete);
             $em->flush();
         }
 
@@ -243,19 +195,15 @@ class ThreadController extends Controller
     }
 
     /**
-     * Creates a form to delete a Thread entity by id.
-     *
-     * @param mixed $id The entity id
-     *
-     * @return \Symfony\Component\Form\Form The form
+     * @param Thread $threadToDelete
+     * @return \Symfony\Component\Form\Form
      */
-    private function createDeleteForm($id)
+    private function createDeleteForm(Thread $threadToDelete)
     {
         return $this->createFormBuilder()
-            ->setAction($this->generateUrl('thread_delete', array('id' => $id)))
+            ->setAction($this->generateUrl('thread_delete', array('id' => $threadToDelete->getId())))
             ->setMethod('DELETE')
             ->add('submit', 'submit', array('label' => 'Delete'))
-            ->getForm()
-        ;
+            ->getForm();
     }
 }

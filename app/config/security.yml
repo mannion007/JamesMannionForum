@@ -1,28 +1,42 @@
 security:
     encoders:
-        FOS\UserBundle\Model\UserInterface: sha512
-
-    role_hierarchy:
-        ROLE_ADMIN:       ROLE_USER
-        ROLE_SUPER_ADMIN: [ROLE_ADMIN]
+        JamesMannion\ForumBundle\Entity\User:
+            algorithm: bcrypt
+            cost: 7
+        JamesMannion\ForumBundle\Entity\Admin:
+            algorithm: bcrypt
+            cost: 7
 
     providers:
-        fos_userbundle:
-            id: fos_user.user_provider.username
+        users:
+            entity: { class: JamesMannionForumBundle:User, property: username }
+        admins:
+            entity: { class: JamesMannionForumBundle:Admin, property: username }
+
+    role_hierarchy:
+        ROLE_USER:        ROLE_USER
+        ROLE_ADMIN:       [ROLE_USER, ROLE_ADMIN]
+        ROLE_SUPER_ADMIN: [ROLE_SUPER_ADMIN, ROLE_ALLOWED_TO_SWITCH]
 
     firewalls:
-        main:
-            pattern: ^/
+        dev:
+            pattern:  ^/(_(profiler|wdt)|css|images|js)/
+            security: false
+
+        system:
+            pattern:    ^/
             form_login:
-                provider: fos_userbundle
-                csrf_provider: form.csrf_provider
-            logout:       true
-            anonymous:    true
+                success_handler: authentication_handler
+                check_path: JamesMannionForumBundle_check
+                login_path: JamesMannionForumBundle_login
+                default_target_path: JamesMannionForumBundle_dashboardShow
+            logout:
+                path:   JamesMannionForumBundle_logout
+                target: JamesMannionForumBundle_homepage
+            anonymous: ~
 
     access_control:
-        - { path: ^/login$, role: IS_AUTHENTICATED_ANONYMOUSLY }
-        - { path: ^/register, role: IS_AUTHENTICATED_ANONYMOUSLY }
-        - { path: ^/resetting, role: IS_AUTHENTICATED_ANONYMOUSLY }
-        - { path: ^/admin/, role: ROLE_ADMIN }
-        - { path: ^/threads/new, role: ROLE_USER }
-        - { path: ^/posts/new, role: ROLE_USER }
+        - { path: ^/threads/new/, roles: ROLE_USER }
+        - { path: ^/system, roles: ROLE_USER }
+        - { path: ^/admin, roles: ROLE_ADMIN }
+        - { path: ^/, roles: IS_AUTHENTICATED_ANONYMOUSLY }

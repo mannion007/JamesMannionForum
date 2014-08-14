@@ -1,0 +1,15 @@
+{% form_theme form 'JamesMannionForumBundle:Form:Authentication/loginFormTheme.html.twig' %}
+
+<form class="form-inline" action="{{ path('JamesMannionForumBundle_check') }}" method="post">
+    {{ form_errors(form) }}
+    <div class="form-group">
+    {{ form_widget(form.username) }}
+    </div>
+    <div class="form-group">
+    {{ form_widget(form.password) }}
+    </div>
+    {{ form_rest(form) }}
+
+    <input type="submit" value="Login" class="btn btn-success" />
+    <p><small><a href="{{ path('JamesMannionForumBundle_userCreate') }}">Register</a></small></p>
+</form>

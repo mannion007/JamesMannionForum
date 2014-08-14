@@ -18,7 +18,7 @@
         <tbody>
         {% for thread in threads %}
             <tr>
-                <td><a href="{{ path('thread_show', { 'threadId': thread.id }) }}">{{ thread.title }}</a></td>
+                <td><a href="{{ path('thread_show', { 'id': thread.id }) }}">{{ thread.title }}</a></td>
                 <td>-</td>
                 <td>{% if thread.created %}{{ thread.created|date('Y-m-d H:i:s') }}{% endif %}</td>
                 <td>{% if thread.updated %}{{ thread.updated|date('Y-m-d H:i:s') }}{% endif %}</td>

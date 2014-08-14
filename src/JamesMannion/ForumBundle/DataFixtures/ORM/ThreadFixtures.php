@@ -1,17 +1,18 @@
 <?php
-namespace Acme\HelloBundle\DataFixtures\ORM;
+namespace JamesMannion\ForumBundle\DataFixtures;
 
 use Doctrine\Common\DataFixtures\AbstractFixture;
 use Doctrine\Common\DataFixtures\OrderedFixtureInterface;
 use Doctrine\Common\Persistence\ObjectManager;
+use JamesMannion\ForumBundle\Constants\Fixtures;
 use JamesMannion\ForumBundle\Entity\Post;
 use JamesMannion\ForumBundle\Entity\Thread;
 
 class ThreadFixtures extends AbstractFixture implements OrderedFixtureInterface
 {
-
-    private $order = 4;
-
+    /**
+     * @param ObjectManager $manager
+     */
     public function load(ObjectManager $manager)
     {
         $count = 1;
@@ -43,6 +44,6 @@ class ThreadFixtures extends AbstractFixture implements OrderedFixtureInterface
 
     public function getOrder()
     {
-        return $this->order;
+        return Fixtures::THREAD_FIXTURES_ORDER;
     }
 }

@@ -12,37 +12,39 @@ namespace JamesMannion\ForumBundle\Constants;
 class Label {
 
     /*
-     * Room Labels
+     * Room
      */
     const ROOM_NAME         = 'Room Name';
     const ROOM_DESCRIPTION  = 'Room Description';
 
     /*
-     * Thread Labels
+     * Thread
      */
     const THREAD_TITLE  = 'Thread Title';
     const THREAD_AUTHOR = 'Thread Author';
     const THREAD_ROOM   = 'Thread Room';
 
     /*
-     * Post Labels
+     * Post
      */
     const POST_BODY     = 'Post Body';
     const POST_AUTHOR   = 'Post Author';
     const POST_THREAD   = 'Post Thread';
 
     /*
-     * User Labels
+     * User
      */
-    const REGISTRATION_FORENAME = 'Forename';
-    const REGISTRATION_SURNAME  = 'Surname';
-    const REGISTRATION_DOB      = 'Date of Birth';
+    const REGISTRATION_USERNAME             = 'Username';
+    const REGISTRATION_EMAIL                = 'Email';
+    const REGISTRATION_REPEAT_EMAIL         = 'Repeat Email';
+    const REGISTRATION_PASSWORD             = 'Password';
+    const REGISTRATION_REPEAT_PASSWORD      = 'Repeat Password';
+    const REGISTRATION_MEMORABLE_QUESTION   = 'Memorable Question';
+    const REGISTRATION_MEMORABLE_ANSWER     = 'Answer to Memorable Question';
 
     /*
-     * Contact form label
+     * Authentication
      */
-    const ENQUIRY_NAME      = 'Name';
-    const ENQUIRY_EMAIL     = 'Email Address';
-    const ENQUIRY_TELEPHONE = 'Contact Number';
-    const ENQUIRY_BODY      = 'Enquiry';
+    const AUTHENTICATION_USER_USERNAME  = 'Username';
+    const AUTHENTICATION_USER_PASSWORD = 'Password';
 }

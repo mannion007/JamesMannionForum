@@ -1,59 +1,45 @@
 <?php
-namespace Acme\HelloBundle\DataFixtures\ORM;
+namespace JamesMannion\ForumBundle\DataFixtures;
 
 use Doctrine\Common\DataFixtures\AbstractFixture;
 use Doctrine\Common\DataFixtures\OrderedFixtureInterface;
 use Doctrine\Common\Persistence\ObjectManager;
+use JamesMannion\ForumBundle\Constants\Fixtures;
 use JamesMannion\ForumBundle\Entity\User;
-use Symfony\Component\DependencyInjection\ContainerAwareInterface;
-use Symfony\Component\DependencyInjection\ContainerInterface;
+use JamesMannion\ForumBundle\Constants\AppConfig;
 
-class UserFixtures extends AbstractFixture implements OrderedFixtureInterface, ContainerAwareInterface
+class UserFixtures extends AbstractFixture implements OrderedFixtureInterface
 {
-
-    private $order = 2;
-
-    private $forenames = array('Homer', 'Bart', 'Moe', 'Barney', 'Otto');
-
-    private $surnames = array('Simpson', 'Sislack', 'Gumble', 'Bouvier', 'Van Houten');
-
     /**
-     * @var ContainerInterface
+     * @param ObjectManager $manager
      */
-    private $container;
-
-    /**
-     * {@inheritDoc}
-     */
-    public function setContainer(ContainerInterface $container = null)
-    {
-        $this->container = $container;
-    }
-
     public function load(ObjectManager $manager)
     {
+        /** @var User[] $users $i */
         for($i=0; $i<5; $i++) {
-            $userManager = $this->container->get('fos_user.user_manager');
+            $password = 'password' . $i;
+            $hashedPassword = password_hash($password, PASSWORD_BCRYPT);
 
-            /** @var User $user */
-            $user = $userManager->createUser();
-            $user->setUsername('user' . $i);
-            $user->setForename($this->forenames[$i]);
-            $user->setSurname($this->surnames[$i]);
-            $user->setDob(new \DateTime());
-            $user->setEmail('user' . $i . '@gmail.com');
-            $user->setPlainPassword('password' . $i);
-            $user->setEnabled(true);
-            $user->setRoles(array('ROLE_USER'));
+            $users[$i] = new User();
+            $users[$i]->setUsername('User '.$i);
+            $users[$i]->setEmail('user'.$i.'@'.AppConfig::DOMAIN);
+            $users[$i]->setPassword($hashedPassword);
+            $users[$i]->setCreated(new \DateTime());
+            $users[$i]->setUpdated(new \DateTime());
+            $users[$i]->setMemorableQuestion(
+                $this->getReference('memorableQuestion-' . rand(0,5))
+            );
+            $users[$i]->setMemorableAnswer('Memorable Answer '.$i);
+            $users[$i]->setIsActive(true);
 
-            $userManager->updateUser($user);
-
-            $this->addReference('user' . $i, $user);
+            $manager->persist($users[$i]);
+            $manager->flush();
+            $this->addReference('user' . $i, $users[$i]);
         }
     }
 
     public function getOrder()
     {
-        return $this->order;
+        return Fixtures::USER_FIXTURES_ORDER;
     }
 }

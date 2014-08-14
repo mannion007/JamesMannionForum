@@ -24,4 +24,7 @@ class Title {
 
     const BUILDING_LIST = 'Buildings';
 
+    const USER_CREATE   = 'Create User';
+    const USER_CREATED  = 'User Created';
+
 } 
