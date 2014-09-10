@@ -5,10 +5,6 @@
 {% block contentTitle -%}{{ contentTitle }}{% endblock contentTitle -%}
 
 {% block body -%}
-
-    <form action="{{ path('thread_create', { 'id': room.id }) }}" method="post" >
-        {{ form_errors(form) }}
-        {{ form_rest(form) }}
-    </form>
+   {{ user.username }}
 
 {% endblock %}

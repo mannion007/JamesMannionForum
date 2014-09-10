@@ -8,22 +8,23 @@ use JamesMannion\ForumBundle\Entity\Thread;
 use JamesMannion\ForumBundle\Entity\Room;
 use JamesMannion\ForumBundle\Form\ThreadType;
 use JamesMannion\ForumBundle\Constants\AppConfig;
-use JamesMannion\ForumBundle\Constants\Title;
+use JamesMannion\ForumBundle\Constants\PageTitle;
 use JamesMannion\ForumBundle\Constants\SuccessFlash;
 
-class ThreadController extends Controller
+class ThreadController extends BaseController
 {
 
     /**
      * @return \Symfony\Component\HttpFoundation\Response
      */
-    public function indexAction()
+    public function adminIndexAction()
     {
         $em = $this->getDoctrine()->getManager();
         $threadsToShow = $em->getRepository('JamesMannionForumBundle:Thread')->findAll();
         return $this->render('JamesMannionForumBundle:Thread:index.html.twig', array(
-            'systemName'    => AppConfig::SYSTEM_NAME,
-            'title'         => Title::THREADS_LIST,
+            'appConfig'     => $this->appConfig,
+            'pageTitle'     => PageTitle::THREADS_LIST,
+            'title'         => PageTitle::THREADS_LIST,
             'threads'       => $threadsToShow
         ));
     }
@@ -62,7 +63,7 @@ class ThreadController extends Controller
 
         return $this->render('JamesMannionForumBundle:Thread:new.html.twig', array(
             'systemName'    => AppConfig::SYSTEM_NAME,
-            'title'         => Title::THREADS_NEW,
+            'title'         => PageTitle::THREADS_NEW,
             'entity'        => $threadToCreate,
             'form'          => $form->createView(),
         ));
@@ -92,8 +93,9 @@ class ThreadController extends Controller
         $threadToCreate = new Thread();
         $form   = $this->createCreateForm($roomToCreateThreadIn, $threadToCreate);
         return $this->render('JamesMannionForumBundle:Thread:new.html.twig', array(
-            'systemName'    => AppConfig::SYSTEM_NAME,
-            'title'         => Title::THREADS_NEW,
+            'appConfig'     => $this->appConfig,
+            'pageTitle'     => PageTitle::THREADS_NEW,
+            'contentTitle'  => 'Create new Thread in ' . $roomToCreateThreadIn->getName(),
             'thread'        => $threadToCreate,
             'room'          => $roomToCreateThreadIn,
             'form'          => $form->createView())
@@ -111,10 +113,9 @@ class ThreadController extends Controller
         $em = $this->getDoctrine()->getManager();
         $em->persist($threadToShow);
         $em->flush();
-
         return $this->render('JamesMannionForumBundle:Thread:show.html.twig', array(
-            'systemName'    => AppConfig::SYSTEM_NAME,
-            'title'         => Title::THREADS_SHOW,
+            'appConfig'     => $this->appConfig,
+            'pageTitle'     => PageTitle::THREADS_SHOW . ' "' . $threadToShow->getTitle() . '"',
             'thread'        => $threadToShow,
             'posts'         => $threadToShow->getPosts(),
         ));
@@ -131,9 +132,12 @@ class ThreadController extends Controller
         $deleteForm = $this->createDeleteForm($threadToEdit);
 
         return $this->render('JamesMannionForumBundle:Thread:edit.html.twig', array(
-            'thread'      => $threadToEdit,
-            'edit_form'   => $editForm->createView(),
-            'delete_form' => $deleteForm->createView(),
+            'appConfig'     => $this->appConfig,
+            'pageTitle'     => PageTitle::THREADS_EDIT . '"' . $threadToEdit->getTitle() . '"',
+            'contentTitle'  => 'Edit Thread "' . $threadToEdit->getTitle() . '"',
+            'thread'        => $threadToEdit,
+            'edit_form'     => $editForm->createView(),
+            'delete_form'   => $deleteForm->createView(),
         ));
     }
 

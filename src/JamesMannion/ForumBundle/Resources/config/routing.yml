@@ -12,18 +12,15 @@ JamesMannionForumBundle_room:
 
 JamesMannionForumBundle_thread:
     resource: "@JamesMannionForumBundle/Resources/config/routing/thread.yml"
-    prefix:   /threads
+    prefix:   /
 
 JamesMannionForumBundle_post:
     resource: "@JamesMannionForumBundle/Resources/config/routing/post.yml"
-    prefix:   /posts
+    prefix:   /
 
 JamesMannionForumBundle_user:
     resource: "@JamesMannionForumBundle/Resources/config/routing/user.yml"
     prefix:   /user
-
-
-### USER ROUTES ###
 
 ### AUTHENTICATION CHECK ###
 

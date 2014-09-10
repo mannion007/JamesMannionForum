@@ -1,0 +1,35 @@
+{% extends '::base.html.twig' %}
+
+{% block pageTitle -%}{{ pageTitle }}{% endblock pageTitle -%}
+
+{% block contentTitle -%}{{ contentTitle }}{% endblock contentTitle -%}
+
+{% block body -%}
+    <table class="table table-responsive table-striped">
+        <thead>
+            <tr>
+                <th>Username</th>
+                <th>Post Count</th>
+                <th>Joined</th>
+                <th>Last Login</th>
+            </tr>
+        </thead>
+        <tbody>
+        {% for user in users %}
+            <tr>
+                <td>{{ user.username }}</td>
+                <td>{{ user.posts|length }}</td>
+                <td>{{ user.created|date(appConfig.dateDisplayFormat) }}</td>
+                <td>
+                    {% if 0 < user.logins|length%}
+                        {{ user.logins|last.created|date(appConfig.dateDisplayFormat) }}
+                    {% else %}
+                        -
+                    {% endif %}
+                </td>
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+
+{% endblock %}

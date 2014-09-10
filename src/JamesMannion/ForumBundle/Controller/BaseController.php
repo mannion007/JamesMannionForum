@@ -19,8 +19,10 @@ class BaseController extends Controller
 
     public function __construct()
     {
-        $this->appConfig['domain']  = AppConfig::DOMAIN;
-        $this->appConfig['systemName']  = AppConfig::SYSTEM_NAME;
+        $this->appConfig['domain']              = AppConfig::DOMAIN;
+        $this->appConfig['systemName']          = AppConfig::SYSTEM_NAME;
+        $this->appConfig['systemName']          = AppConfig::SYSTEM_NAME;
+        $this->appConfig['dateDisplayFormat']   = AppConfig::DATE_DISPLAY_FORMAT;
     }
 
 } 

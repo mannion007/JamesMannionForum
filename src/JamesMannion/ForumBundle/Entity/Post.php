@@ -202,4 +202,17 @@ class Post
     {
         $this->thread->setUpdated();
     }
+
+    /**
+     * @param User $userToCheck
+     * @return bool
+     */
+    public function isAuthor(User $userToCheck)
+    {
+        if($userToCheck->getId() == $this->getAuthor()->getId())
+        {
+            return true;
+        }
+        return false;
+    }
 }

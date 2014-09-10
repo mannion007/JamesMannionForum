@@ -1,3 +1,15 @@
+user:
+    path:     /
+    defaults: { _controller: "JamesMannionForumBundle:User:index" }
+    requirements:
+        _method: GET
+
+user_show:
+    path:     /{id}/show
+    defaults: { _controller: "JamesMannionForumBundle:User:show" }
+    requirements:
+        _method: GET
+
 JamesMannionForumBundle_userCreate:
     pattern:  /register
     defaults: { _controller: JamesMannionForumBundle:User:create }

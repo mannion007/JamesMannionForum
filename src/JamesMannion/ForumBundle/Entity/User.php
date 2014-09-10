@@ -11,6 +11,7 @@ use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
 use JamesMannion\ForumBundle\Constants\Validation;
 use Bafford\PasswordStrengthBundle\Validator\Constraints\PasswordStrength;
 use JamesMannion\ForumBundle\Constants\AppConfig;
+use Doctrine\ORM\Mapping\OrderBy;
 
 /**
  * User
@@ -105,6 +106,7 @@ class User implements AdvancedUserInterface, \Serializable
     /**
      * @var ArrayCollection
      * @ORM\OneToMany(targetEntity="Login", mappedBy="user", cascade={"persist"})
+     * @OrderBy({"created" = "ASC"})
      */
     private $logins;
 

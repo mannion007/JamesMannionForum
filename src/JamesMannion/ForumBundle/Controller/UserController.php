@@ -12,10 +12,37 @@ use JamesMannion\ForumBundle\Event\UserEvent;
 use Symfony\Component\HttpFoundation\Request;
 use JamesMannion\ForumBundle\Entity\User;
 use JamesMannion\ForumBundle\Form\User\UserCreateForm;
-use JamesMannion\ForumBundle\Constants\Title;
+use JamesMannion\ForumBundle\Constants\PageTitle;
 
 class UserController extends BaseController
 {
+
+    /**
+     * @return \Symfony\Component\HttpFoundation\Response
+     */
+    public function indexAction()
+    {
+        $em = $this->getDoctrine()->getManager();
+        $usersToShow = $em->getRepository('JamesMannionForumBundle:User')->findAll();
+        return $this->render('JamesMannionForumBundle:User:index.html.twig', array(
+            'appConfig'     => $this->appConfig,
+            'pageTitle'     => PageTitle::THREADS_LIST,
+            'contentTitle'  => 'Registered Users',
+            'users'         => $usersToShow
+        ));
+    }
+
+    public function showAction(User $userToShow)
+    {
+        return $this->render('JamesMannionForumBundle:User:show.html.twig', array(
+            'appConfig'     => $this->appConfig,
+            'pageTitle'     => PageTitle::USER_SHOW,
+            'contentTitle'  => 'User ' . $userToShow->getUsername(),
+            'user'          => $userToShow
+        ));
+    }
+
+
 
     /**
      * @param Request $request
@@ -54,7 +81,7 @@ class UserController extends BaseController
                 'JamesMannionForumBundle:User:created.html.twig',
                 array(
                     'appConfig'     => $this->appConfig,
-                    'pageTitle'     => Title::USER_CREATED,
+                    'pageTitle'     => PageTitle::USER_CREATED,
                     'createdUser'   => $userToCreate)
             );
         }
@@ -63,7 +90,7 @@ class UserController extends BaseController
             'JamesMannionForumBundle:User:create.html.twig',
             array(
                 'appConfig'     => $this->appConfig,
-                'pageTitle'     => TITLE::USER_CREATE,
+                'pageTitle'     => PageTitle::USER_CREATE,
                 'form'          => $form->createView()));
     }
 }

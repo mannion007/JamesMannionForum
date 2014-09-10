@@ -14,6 +14,7 @@ class SuccessFlash {
      * Post Messages
      */
     const POST_CREATED_SUCCESSFULLY = 'Post Created Successfully.';
+    const POST_UPDATED_SUCCESSFULLY = 'Your Post has been updated successfully.';
 
     /**
      * Thread Messages

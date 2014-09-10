@@ -1,11 +1,10 @@
 {% extends '::base.html.twig' %}
 
+{% block pageTitle -%}{{ pageTitle }}{% endblock pageTitle -%}
+
+{% block contentTitle -%}{{ contentTitle }}{% endblock contentTitle -%}
+
 {% block body -%}
-    <h1>Thread edit</h1>
-
-    <a href="{{ path('thread') }}" class="btn btn-default">Back to List</a>
-
     {{ form(edit_form) }}
-
     {{ form(delete_form) }}
 {% endblock %}

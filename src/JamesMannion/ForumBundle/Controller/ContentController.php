@@ -5,7 +5,7 @@ namespace JamesMannion\ForumBundle\Controller;
 use JamesMannion\ForumBundle\Constants\Config;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\Request;
-use JamesMannion\ForumBundle\Constants\Title;
+use JamesMannion\ForumBundle\Constants\PageTitle;
 
 
 class ContentController extends Controller
@@ -22,7 +22,7 @@ class ContentController extends Controller
             'JamesMannionForumBundle:Content:index.html.twig',
             array(
                 'systemName'    => Config::SYSTEM_NAME,
-                'title'     => Title::HOMEPAGE,
+                'title'     => PageTitle::HOMEPAGE,
                 'contentTitle'  => 'Welcome!',
                 'content'       => 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Ut quis tempor diam,
                                     non mattis ligula. Cras eget suscipit mi. Mauris eget massa euismod, lobortis

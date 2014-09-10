@@ -5,14 +5,15 @@ namespace JamesMannion\ForumBundle\Controller;
 use JamesMannion\ForumBundle\Constants\SuccessFlash;
 use JamesMannion\ForumBundle\Event\PostEvent;
 use Symfony\Component\HttpFoundation\Request;
-use Symfony\Bundle\FrameworkBundle\Controller\Controller;
+
 use JamesMannion\ForumBundle\Entity\Post;
 use JamesMannion\ForumBundle\Entity\Thread;
 use JamesMannion\ForumBundle\Form\PostType;
 use JamesMannion\ForumBundle\Constants\AppConfig;
-use JamesMannion\ForumBundle\Constants\Title;
+use JamesMannion\ForumBundle\Constants\PageTitle;
+use JamesMannion\ForumBundle\Constants\ErrorFlash;
 
-class PostController extends Controller
+class PostController extends BaseController
 {
 
     /**
@@ -20,12 +21,12 @@ class PostController extends Controller
      */
     public function indexAction()
     {
-        $em = $this->getDoctrine()->getManager();
-        $postsToShow = $em->getRepository('JamesMannionForumBundle:Post')->findAll();
+        $entityManager = $this->getDoctrine()->getManager();
+        $postsToShow = $entityManager->getRepository('JamesMannionForumBundle:Post')->findAll();
 
         return $this->render('JamesMannionForumBundle:Post:index.html.twig', array(
-            'systemName'    => AppConfig::SYSTEM_NAME,
-            'title'         => Title::POSTS_LIST,
+            'appConfig'     => $this->appConfig,
+            'pageTitle'     => PageTitle::POSTS_LIST,
             'posts'         => $postsToShow,
         ));
     }
@@ -46,9 +47,9 @@ class PostController extends Controller
             $postToCreate->setThread($thread);
             $postToCreate->setAuthor($this->getUser());
 
-            $em = $this->getDoctrine()->getManager();
-            $em->persist($postToCreate);
-            $em->flush();
+            $entityManager = $this->getDoctrine()->getManager();
+            $entityManager->persist($postToCreate);
+            $entityManager->flush();
 
             $this->get('session')->getFlashBag()->add(
                 'success',
@@ -61,8 +62,9 @@ class PostController extends Controller
             return $this->redirect($this->generateUrl('thread_show',array('id' => $thread->getId())));
         }
         return $this->render('JamesMannionForumBundle:Post:new.html.twig', array(
-            'post' => $postToCreate,
-            'form'   => $form->createView(),
+            'appConfig' => $this->appConfig,
+            'post'      => $postToCreate,
+            'form'      => $form->createView(),
         ));
     }
 
@@ -90,8 +92,8 @@ class PostController extends Controller
         $postToCreate = new Post();
         $form = $this->createCreateForm($threadToCreatePostIn, $postToCreate);
         return $this->render('JamesMannionForumBundle:Post:new.html.twig', array(
-            'systemName'    => AppConfig::SYSTEM_NAME,
-            'title'         => Title::POSTS_NEW,
+            'appConfig'     => $this->appConfig,
+            'title'         => PageTitle::POSTS_NEW,
             'post'          => $postToCreate,
             'thread'        => $threadToCreatePostIn,
             'form'          => $form->createView(),
@@ -118,14 +120,25 @@ class PostController extends Controller
      */
     public function editAction(Post $postToEdit)
     {
-        $editForm = $this->createEditForm($postToEdit);
-        $deleteForm = $this->createDeleteForm($postToEdit);
+        if(true === $postToEdit->isAuthor($this->getUser())) {
+            $editForm = $this->createEditForm($postToEdit);
+            $deleteForm = $this->createDeleteForm($postToEdit);
 
-        return $this->render('JamesMannionForumBundle:Post:edit.html.twig', array(
-            'post'          => $postToEdit,
-            'edit_form'     => $editForm->createView(),
-            'delete_form'   => $deleteForm->createView(),
-        ));
+            return $this->render('JamesMannionForumBundle:Post:edit.html.twig', array(
+                'appConfig'     => $this->appConfig,
+                'pageTitle'     => PageTitle::POSTS_EDIT,
+                'contentTitle'  => 'Edit Post',
+                'post'          => $postToEdit,
+                'edit_form'     => $editForm->createView(),
+                'delete_form'   => $deleteForm->createView(),
+            ));
+        }
+
+        $this->get('session')->getFlashBag()->add(
+            'danger',
+            ErrorFlash::NOT_POST_AUTHOR
+        );
+        return $this->redirect($this->generateUrl('thread_show', array('id' => $postToEdit->getThread()->getId())));
     }
 
     /**
@@ -144,27 +157,39 @@ class PostController extends Controller
 
     /**
      * @param Request $request
-     * @param Post $post
+     * @param Post $postToUpdate
      * @return \Symfony\Component\HttpFoundation\RedirectResponse|\Symfony\Component\HttpFoundation\Response
-     * @throws \Symfony\Component\HttpKernel\Exception\NotFoundHttpException
      */
-    public function updateAction(Request $request, Post $post)
+    public function updateAction(Request $request, Post $postToUpdate)
     {
-        $deleteForm = $this->createDeleteForm($post);
-        $editForm = $this->createEditForm($post);
-        $editForm->handleRequest($request);
+        if(true === $postToUpdate->isAuthor($this->getUser())) {
+            $deleteForm = $this->createDeleteForm($postToUpdate);
+            $editForm = $this->createEditForm($postToUpdate);
+            $editForm->handleRequest($request);
 
-        if ($editForm->isValid()) {
-            $em = $this->getDoctrine()->getManager();
-            $em->flush();
-            return $this->redirect($this->generateUrl('post_edit', array('id' => $post->getId())));
+            if ($editForm->isValid()) {
+                $em = $this->getDoctrine()->getManager();
+                $em->flush();
+                $this->get('session')->getFlashBag()->add(
+                    'success',
+                    SuccessFlash::POST_UPDATED_SUCCESSFULLY
+                );
+                return $this->redirect($this->generateUrl('thread_show', array('id' => $postToUpdate->getThread()->getId())));
+            }
+
+            return $this->render('JamesMannionForumBundle:Post:edit.html.twig', array(
+                'appConfig'     => $this->appConfig,
+                'post'          => $postToUpdate,
+                'edit_form'     => $editForm->createView(),
+                'delete_form'   => $deleteForm->createView(),
+            ));
         }
 
-        return $this->render('JamesMannionForumBundle:Post:edit.html.twig', array(
-            'post'          => $post,
-            'edit_form'     => $editForm->createView(),
-            'delete_form'   => $deleteForm->createView(),
-        ));
+        $this->get('session')->getFlashBag()->add(
+            'danger',
+            ErrorFlash::NOT_POST_AUTHOR
+        );
+        return $this->redirect($this->generateUrl('thread_show', array('id' => $postToUpdate->getThread()->getId())));
     }
 
     /**

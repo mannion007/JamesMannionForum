@@ -1,8 +1,8 @@
 {% extends '::base.html.twig' %}
 
-{% block pageTitle -%}{{ systemName }} | {{ title }}{% endblock pageTitle -%}
+{% block pageTitle -%}{{ pageTitle }}{% endblock pageTitle -%}
 
-{% block contentTitle -%}{{ title }}{% endblock contentTitle -%}
+{% block contentTitle -%}{{ pageTitle }}{% endblock contentTitle -%}
 
 {% block body -%}
 
@@ -14,6 +14,11 @@
             <tr>
                 <th>Author</th>
                 <th>Body</th>
+                <th>Created</th>
+                <th>Updated</th>
+                {% if app.user %}
+                    <th>Action</th>
+                {% endif %}
             </tr>
             </thead>
             <tbody>
@@ -21,6 +26,15 @@
                 <tr>
                     <td>{{ post.author.username }}</td>
                     <td>{{ post.body }}</td>
+                    <td>{{ post.created|date(appConfig.dateDisplayFormat) }}</td>
+                    <td>{{ post.updated|date(appConfig.dateDisplayFormat) }}</td>
+                    {% if app.user %}
+                        <td>
+                            {% if app.user == post.author %}
+                                <a href="{{ path('post_edit', { 'id': post.id }) }}" class="btn btn-primary">Edit</a>
+                            {% endif %}
+                        </td>
+                    {% endif %}
                 </tr>
             {% endfor %}
             </tbody>
@@ -30,7 +44,5 @@
     {% endif %}
 
     <a href="{{ path('post_new', { 'id': thread.id }) }}" class="btn btn-primary">Create a new Post</a>
-
-    <a href="{{ path('thread') }}" class="btn btn-default">Back to the list</a>
 
 {% endblock %}

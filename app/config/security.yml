@@ -36,7 +36,7 @@ security:
             anonymous: ~
 
     access_control:
-        - { path: ^/threads/new/, roles: ROLE_USER }
+        - { path: ^/secure/, roles: ROLE_USER }
         - { path: ^/system, roles: ROLE_USER }
         - { path: ^/admin, roles: ROLE_ADMIN }
         - { path: ^/, roles: IS_AUTHENTICATED_ANONYMOUSLY }

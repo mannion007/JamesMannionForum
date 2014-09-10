@@ -8,6 +8,10 @@ use JamesMannion\ForumBundle\Form\Authentication\AuthenticationLoginForm;
 
 class AuthenticationController extends BaseController
 {
+    /**
+     * @param Request $request
+     * @return \Symfony\Component\HttpFoundation\Response
+     */
     public function loginAction(Request $request)
     {
         if ($request->attributes->has(SecurityContext::AUTHENTICATION_ERROR)) {
@@ -16,26 +20,27 @@ class AuthenticationController extends BaseController
             $error = $request->getSession()->get(SecurityContext::AUTHENTICATION_ERROR);
         }
 
-        $form = $this->createForm(new AuthenticationLoginForm());
+        $loginForm = $this->createForm(new AuthenticationLoginForm());
         return $this->render('JamesMannionForumBundle:Authentication:login.html.twig', array(
             'appConfig'     => $this->appConfig,
             'last_username' => $request->getSession()->get(SecurityContext::LAST_USERNAME),
-            'form'          => $form->createView(),
+            'form'          => $loginForm->createView(),
             'error'         => $error
         ));
     }
 
+    /**
+     * @return \Symfony\Component\HttpFoundation\Response
+     */
     public function loginFormAction()
     {
-        $form = $this->createForm(new AuthenticationLoginForm());
-
-        $parameters = array(
-            'form'          => $form->createView()
-        );
-
+        $loginForm = $this->createForm(new AuthenticationLoginForm());
         return $this->render(
             'JamesMannionForumBundle:Authentication:loginForm.html.twig',
-            $parameters
+            array(
+                'appconfig'     => $this->appConfig,
+                'form'          => $loginForm->createView()
+            )
         );
     }
 }

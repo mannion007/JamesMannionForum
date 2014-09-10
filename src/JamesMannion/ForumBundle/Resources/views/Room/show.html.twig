@@ -1,14 +1,14 @@
 {% extends '::base.html.twig' %}
 
-{% block pageTitle -%}{{ systemName }} | {{ title }}{% endblock pageTitle -%}
+{% block pageTitle -%}{{ pageTitle }}{% endblock pageTitle -%}
 
-{% block contentTitle -%}{{ title }}{% endblock contentTitle -%}
+{% block contentTitle -%}{{ contentTitle }}{% endblock contentTitle -%}
 
 {% block body -%}
 
     <p>{{ room.description }}</p>
 
-    <h3>There are {{ threads|length }} Threads in {{ title }}</h3>
+    <h3>There are {{ threads|length }} Threads in {{ room.name }}</h3>
 
     {% if(0 < threads|length) %}
 
@@ -20,19 +20,29 @@
                 <th>Last Post</th>
                 <th>Replies</th>
                 <th>Views</th>
+                {% if app.user %}
+                    <th>Action</th>
+                {% endif %}
             </tr>
             </thead>
             <tbody>
             {% for thread in threads %}
                 <tr>
                     <td><a href="{{ path('thread_show', { 'id': thread.id }) }}">{{ thread.title }}</a></td>
-                    <td>{{ thread.posts|first.author.username }}</td>
+                    <td><a href="{{ path('user_show', { 'id': room.id }) }}">{{ thread.posts|first.author.username }}</a></td>
                     <td>
                         {{ thread.posts|last.author.username }}
-                        {{ thread.updated|date('D M d, Y  H:i:s') }}
+                        {{ thread.updated|date(appConfig.dateDisplayFormat) }}
                     </td>
                     <td>{{ thread.posts | length -1}}</td>
                     <td>{{ thread.views }}</td>
+                    {% if app.user %}
+                        <td>
+                            {% if app.user == thread.posts|first.author %}
+                                <a href="{{ path('thread_edit', { 'id': thread.id }) }}" class="btn btn-primary">Edit</a>
+                            {% endif %}
+                        </td>
+                    {% endif %}
                 </tr>
             {% endfor %}
             </tbody>

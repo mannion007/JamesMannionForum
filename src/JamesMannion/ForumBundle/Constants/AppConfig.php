@@ -25,4 +25,6 @@ class AppConfig {
     const PASSWORD_REQUIRES_LETTERS = true;
     const PASSWORD_REQUIRES_CASE_DIFFERENCE = true;
     const PASSWORD_REQUIRES_NUMBERS = true;
+
+    const DATE_DISPLAY_FORMAT = 'D jS M Y G:i:s';
 }

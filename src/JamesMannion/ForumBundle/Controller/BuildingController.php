@@ -7,9 +7,9 @@ use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use JamesMannion\ForumBundle\Constants\AppConfig;
 use JamesMannion\ForumBundle\Entity\Building;
 use JamesMannion\ForumBundle\Form\BuildingType;
-use JamesMannion\ForumBundle\Constants\Title;
+use JamesMannion\ForumBundle\Constants\PageTitle;
 
-class BuildingController extends Controller
+class BuildingController extends BaseController
 {
 
     /**
@@ -19,17 +19,9 @@ class BuildingController extends Controller
     {
         $em = $this->getDoctrine()->getManager();
         $buildingsToShow = $em->getRepository('JamesMannionForumBundle:Building')->findAll();
-
-//        $paginator = $this->get('knp_paginator');
-//        $pagination = $paginator->paginate(
-//            $buildingsToShow,
-//            $this->get('request')->query->get('page', 1),
-//            AppConfig::BUILDINGS_PER_PAGE
-//        );
-
         return $this->render('JamesMannionForumBundle:Building:index.html.twig', array(
-            'systemName'    => AppConfig::SYSTEM_NAME,
-            'title'         => Title::BUILDING_LIST,
+            'appConfig'     => $this->appConfig,
+            'pageTitle'     => PageTitle::BUILDING_LIST,
             'buildings'     => $buildingsToShow
         ));
     }
@@ -38,13 +30,13 @@ class BuildingController extends Controller
      * @param Request $request
      * @return \Symfony\Component\HttpFoundation\RedirectResponse|\Symfony\Component\HttpFoundation\Response
      */
-    public function createAction(Request $request)
+    public function adminCreateAction(Request $request)
     {
         $buildingToCreate = new Building();
-        $form = $this->createCreateForm($buildingToCreate);
-        $form->handleRequest($request);
+        $createBuildingForm = $this->createCreateForm($buildingToCreate);
+        $createBuildingForm->handleRequest($request);
 
-        if ($form->isValid()) {
+        if ($createBuildingForm->isValid()) {
             $em = $this->getDoctrine()->getManager();
             $em->persist($buildingToCreate);
             $em->flush();
@@ -52,36 +44,10 @@ class BuildingController extends Controller
         }
 
         return $this->render('JamesMannionForumBundle:Building:new.html.twig', array(
-            'building'  => $buildingToCreate,
-            'form'      => $form->createView(),
-        ));
-    }
-
-    /**
-     * @param Building $buildingToCreate
-     * @return \Symfony\Component\Form\Form
-     */
-    private function createCreateForm(Building $buildingToCreate)
-    {
-        $form = $this->createForm(new BuildingType(), $buildingToCreate, array(
-            'action' => $this->generateUrl('building_create'),
-            'method' => 'POST',
-        ));
-        $form->add('submit', 'submit', array('label' => 'Create'));
-        return $form;
-    }
-
-    /**
-     * @return \Symfony\Component\HttpFoundation\Response
-     */
-    public function newAction()
-    {
-        $buildingToCreate = new Building();
-        $form   = $this->createCreateForm($buildingToCreate);
-
-        return $this->render('JamesMannionForumBundle:Building:new.html.twig', array(
-            'building'  => $buildingToCreate,
-            'form'      => $form->createView(),
+            'appConfig'     => $this->appConfig,
+            'pageTitle'     => PageTitle::ADMIN_CREATE_BUILDING,
+            'building'      => $buildingToCreate,
+            'form'          => $createBuildingForm->createView(),
         ));
     }
 
@@ -95,8 +61,25 @@ class BuildingController extends Controller
         $deleteForm = $this->createDeleteForm($buildingToShow);
 
         return $this->render('JamesMannionForumBundle:Building:show.html.twig', array(
+            'appConfig'     => $this->appConfig,
             'building'      => $buildingToShow,
             'delete_form'   => $deleteForm->createView(),
+        ));
+    }
+
+    /**
+     * @return \Symfony\Component\HttpFoundation\Response
+     */
+    public function newAction()
+    {
+        $buildingToCreate = new Building();
+        $form   = $this->createCreateForm($buildingToCreate);
+
+        return $this->render('JamesMannionForumBundle:Building:new.html.twig', array(
+            'appConfig'     => $this->appConfig,
+            'pageTitle'     => PageTitle::ADMIN_CREATE_BUILDING,
+            'building'      => $buildingToCreate,
+            'form'          => $form->createView(),
         ));
     }
 
@@ -106,30 +89,14 @@ class BuildingController extends Controller
      */
     public function editAction(Building $buildingToEdit)
     {
-        $editForm = $this->createEditForm($buildingToEdit);
-        $deleteForm = $this->createDeleteForm($buildingToEdit);
+        $buildingEditForm = $this->createEditForm($buildingToEdit);
+        $buildingDeleteForm = $this->createDeleteForm($buildingToEdit);
 
         return $this->render('JamesMannionForumBundle:Building:edit.html.twig', array(
             'building'      => $buildingToEdit,
-            'edit_form'     => $editForm->createView(),
-            'delete_form'   => $deleteForm->createView(),
+            'edit_form'     => $buildingEditForm->createView(),
+            'delete_form'   => $buildingDeleteForm->createView(),
         ));
-    }
-
-    /**
-     * @param Building $buildingToCreate
-     * @return \Symfony\Component\Form\Form
-     */
-    private function createEditForm(Building $buildingToCreate)
-    {
-        $form = $this->createForm(new BuildingType(), $buildingToCreate, array(
-            'action' => $this->generateUrl('building_update', array('id' => $buildingToCreate->getId())),
-            'method' => 'PUT',
-        ));
-
-        $form->add('submit', 'submit', array('label' => 'Update'));
-
-        return $form;
     }
 
     /**
@@ -174,6 +141,36 @@ class BuildingController extends Controller
         }
 
         return $this->redirect($this->generateUrl('building'));
+    }
+
+    /**
+     * @param Building $buildingToCreate
+     * @return \Symfony\Component\Form\Form
+     */
+    private function createCreateForm(Building $buildingToCreate)
+    {
+        $form = $this->createForm(new BuildingType(), $buildingToCreate, array(
+            'action' => $this->generateUrl('building_create'),
+            'method' => 'POST',
+        ));
+        $form->add('submit', 'submit', array('label' => 'Create'));
+        return $form;
+    }
+
+    /**
+     * @param Building $buildingToCreate
+     * @return \Symfony\Component\Form\Form
+     */
+    private function createEditForm(Building $buildingToCreate)
+    {
+        $form = $this->createForm(new BuildingType(), $buildingToCreate, array(
+            'action' => $this->generateUrl('building_update', array('id' => $buildingToCreate->getId())),
+            'method' => 'PUT',
+        ));
+
+        $form->add('submit', 'submit', array('label' => 'Update'));
+
+        return $form;
     }
 
     /**

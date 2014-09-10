@@ -1,32 +1,32 @@
 post:
-    path:     /
+    path:     /post/
     defaults: { _controller: "JamesMannionForumBundle:Post:index" }
 
 post_show:
-    path:     /{id}/show
+    path:     /post/{id}/show
     defaults: { _controller: "JamesMannionForumBundle:Post:show" }
 
 post_new:
-    path:     /new/{id}
+    path:     /secure/post/new/{id}
     defaults: { _controller: "JamesMannionForumBundle:Post:new" }
     requirements:
         roomId: \d+
 
 post_create:
-    path:     /create/{id}
+    path:     /secure/post/create/{id}
     defaults: { _controller: "JamesMannionForumBundle:Post:create" }
     requirements: { _method: post }
 
 post_edit:
-    path:     /{id}/edit
+    path:     /secure/post/edit/{id}
     defaults: { _controller: "JamesMannionForumBundle:Post:edit" }
 
 post_update:
-    path:     /{id}/update
+    path:     /secure/post/{id}/update
     defaults: { _controller: "JamesMannionForumBundle:Post:update" }
     requirements: { _method: post|put }
 
 post_delete:
-    path:     /{id}/delete
+    path:     /secure/post/{id}/delete
     defaults: { _controller: "JamesMannionForumBundle:Post:delete" }
     requirements: { _method: post|delete }
