@@ -22,6 +22,7 @@
                 <th>Views</th>
                 {% if app.user %}
                     <th>Action</th>
+                    <th></th>
                 {% endif %}
             </tr>
             </thead>
@@ -31,8 +32,8 @@
                     <td><a href="{{ path('thread_show', { 'id': thread.id }) }}">{{ thread.title }}</a></td>
                     <td><a href="{{ path('user_show', { 'id': room.id }) }}">{{ thread.posts|first.author.username }}</a></td>
                     <td>
-                        {{ thread.posts|last.author.username }}
-                        {{ thread.updated|date(appConfig.dateDisplayFormat) }}
+                        {{ thread.updated|date(appConfig.dateDisplayFormat) }} by
+                        <a href="{{ path('user_show', { 'id': thread.posts|last.author.id }) }}">{{ thread.posts|last.author.username }}</a>
                     </td>
                     <td>{{ thread.posts | length -1}}</td>
                     <td>{{ thread.views }}</td>
@@ -41,6 +42,11 @@
                             {% if app.user == thread.posts|first.author %}
                                 <a href="{{ path('thread_edit', { 'id': thread.id }) }}" class="btn btn-primary">Edit</a>
                             {% endif %}
+                        </td>
+                        <td>
+                            <button type="button" class="ajax btn {% if thread in app.user.threadWatches %}btn-success{% endif %} btn-sm">
+                                <span data-ajaxroute="{{ path('thread_watch_toggle', {'id': thread.id}) }}" class="glyphicon glyphicon-eye-open"></span>
+                            </button>
                         </td>
                     {% endif %}
                 </tr>

@@ -2,6 +2,7 @@
 
 namespace JamesMannion\ForumBundle\Entity;
 
+use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
@@ -35,6 +36,12 @@ class Post
     private $thread;
 
     /**
+     * @ORM\ManyToMany(targetEntity="User", inversedBy="postLikes", cascade={"persist"})
+     * @ORM\JoinTable(name="PostLikes")
+     **/
+    private $likers;
+
+    /**
      * @var boolean
      *
      * @ORM\Column(name="primaryPost", type="boolean")
@@ -62,6 +69,10 @@ class Post
      */
     private $body;
 
+    public function __construct()
+    {
+        $this->likers = new ArrayCollection();
+    }
 
     /**
      * Get id
@@ -102,7 +113,7 @@ class Post
      * @param \JamesMannion\ForumBundle\Entity\User $author
      * @return Post
      */
-    public function setAuthor(\JamesMannion\ForumBundle\Entity\User $author = null)
+    public function setAuthor(User $author = null)
     {
         $this->author = $author;
 
@@ -125,10 +136,9 @@ class Post
      * @param \JamesMannion\ForumBundle\Entity\Thread $thread
      * @return Post
      */
-    public function setThread(\JamesMannion\ForumBundle\Entity\Thread $thread = null)
+    public function setThread(Thread $thread = null)
     {
         $this->thread = $thread;
-
         return $this;
     }
 
@@ -141,6 +151,45 @@ class Post
     {
         return $this->thread;
     }
+
+    /**
+     * @param User $userToAdd
+     * @return $this
+     */
+    public function addLiker(User $userToAdd)
+    {
+        $this->likers[] = $userToAdd;
+        return $this;
+    }
+
+    /**
+     * @param User $userToRemove
+     */
+    public function removeLiker(User $userToRemove)
+    {
+        $this->likers->removeElement($userToRemove);
+    }
+
+    /**
+     * @return ArrayCollection
+     */
+    public function getLikers()
+    {
+        return $this->likers;
+    }
+
+    /**
+     * @param User $userToCheck
+     * @return bool
+     */
+    public function hasLiker(User $userToCheck)
+    {
+        if (true === $this->getLikers()->contains($userToCheck)) {
+            return true;
+        }
+        return false;
+    }
+
     /**
      * @param boolean $primaryPost
      */

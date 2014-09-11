@@ -18,6 +18,7 @@
                 <th>Updated</th>
                 {% if app.user %}
                     <th>Action</th>
+                    <th></th>
                 {% endif %}
             </tr>
             </thead>
@@ -31,8 +32,13 @@
                     {% if app.user %}
                         <td>
                             {% if app.user == post.author %}
-                                <a href="{{ path('post_edit', { 'id': post.id }) }}" class="btn btn-primary">Edit</a>
+                                <a href="{{ path('post_edit', { 'id': post.id }) }}" class="btn btn-primary btn-sm">Edit</a>
                             {% endif %}
+                        </td>
+                        <td>
+                            <button type="button" class="ajax btn {% if post in app.user.postLikes %}btn-success{% endif %} btn-sm">
+                                <span data-ajaxroute="{{ path('post_like_toggle', {'id': post.id}) }}" class="glyphicon glyphicon-thumbs-up"></span>
+                            </button>
                         </td>
                     {% endif %}
                 </tr>

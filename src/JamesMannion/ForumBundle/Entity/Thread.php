@@ -8,7 +8,7 @@ use Doctrine\Common\Collections\ArrayCollection as ArrayCollection;
 /**
  * Thread
  *
- * @ORM\Table()
+ * @ORM\Table(name="Thread")
  * @ORM\Entity
  * @ORM\HasLifecycleCallbacks()
  */
@@ -36,8 +36,8 @@ class Thread
     protected $posts;
 
     /**
-     * @ORM\ManyToMany(targetEntity="User", mappedBy="threadsWatching")
-     *
+     * @ORM\ManyToMany(targetEntity="User", inversedBy="threadWatches", cascade={"persist"})
+     * @ORM\JoinTable(name="ThreadWatches")
      **/
     protected $watchers;
 
@@ -81,6 +81,7 @@ class Thread
     public function __construct()
     {
         $this->posts = new ArrayCollection();
+        $this->watchers = new ArrayCollection();
     }
 
     /**
@@ -187,7 +188,7 @@ class Thread
      * @param \JamesMannion\ForumBundle\Entity\Room $room
      * @return Thread
      */
-    public function setRoom(\JamesMannion\ForumBundle\Entity\Room $room = null)
+    public function setRoom(Room $room = null)
     {
         $this->room = $room;
 
@@ -210,7 +211,7 @@ class Thread
      * @param \JamesMannion\ForumBundle\Entity\Post $posts
      * @return Thread
      */
-    public function addPost(\JamesMannion\ForumBundle\Entity\Post $posts)
+    public function addPost(Post $posts)
     {
         $this->posts[] = $posts;
 
@@ -224,7 +225,7 @@ class Thread
      *
      * @param \JamesMannion\ForumBundle\Entity\Post $posts
      */
-    public function removePost(\JamesMannion\ForumBundle\Entity\Post $posts)
+    public function removePost(Post $posts)
     {
         $this->posts->removeElement($posts);
     }
@@ -240,19 +241,41 @@ class Thread
     }
 
     /**
-     * @param mixed $watchers
+     * @param User $userToAdd
+     * @return $this
      */
-    public function setWatchers($watchers)
+    public function addWatcher(User $userToAdd)
     {
-        $this->watchers = $watchers;
+        $this->watchers[] = $userToAdd;
+        return $this;
     }
 
     /**
-     * @return mixed
+     * @param User $userToRemove
+     */
+    public function removeWatcher(User $userToRemove)
+    {
+        $this->watchers->removeElement($userToRemove);
+    }
+
+    /**
+     * @return ArrayCollection
      */
     public function getWatchers()
     {
         return $this->watchers;
+    }
+
+    /**
+     * @param User $userToCheck
+     * @return bool
+     */
+    public function hasWatcher(User $userToCheck)
+    {
+        if (true === $this->getWatchers()->contains($userToCheck)) {
+            return true;
+        }
+        return false;
     }
 
     /**

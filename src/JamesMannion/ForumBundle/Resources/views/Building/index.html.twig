@@ -12,7 +12,6 @@
                     <th>Name</th>
                     <th>Description</th>
                     <th>Threads</th>
-                    <th>Posts</th>
                     <th>Last Post</th>
                 </tr>
                 </thead>
@@ -22,7 +21,6 @@
                         <td><a href="{{ path('room_show', { 'id': room.id }) }}">{{ room.name }}</a></td>
                         <td>{{ room.description }}</td>
                         <td>{{ room.threads | length }}</td>
-                        <td>-</td>
                         <td><a href="{{ path('user_show', { 'id': room.threads|first.posts|last.author.id }) }}">{{ room.threads|first.posts|last.author }}</a></td>
                     </tr>
                 {% endfor %}

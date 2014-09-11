@@ -5,12 +5,19 @@
         <meta charset="UTF-8" />
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
+        <!-- Jquery CDN -->
+        <script src="http://code.jquery.com/jquery-1.11.0.min.js"></script>
+
         <!-- Bootstrap -->
         <link href="{{ asset('css/bootstrap.css') }}" rel="stylesheet" media="screen">
+
         <!-- Custom styles -->
         {% stylesheets '@JamesMannionForumBundle/Resources/less/main.less' filter="cssrewrite" %}
         <link rel="stylesheet" href="{{ asset_url }}">
         {% endstylesheets %}
+
+        <!-- Custom Scripts -->
+        <script src="{{ asset('bundles/jamesmannionforum/js/scripts.js') }}"></script>
 
         <!-- HTML5 Shim and Respond.js add IE8 support of HTML5 elements and media queries -->
         {% include 'BraincraftedBootstrapBundle::ie8-support.html.twig' %}

@@ -9,7 +9,7 @@ use Doctrine\ORM\Mapping\OrderBy;
 /**
  * Room
  *
- * @ORM\Table()
+ * @ORM\Table(name="Room")
  * @ORM\Entity
  */
 class Room

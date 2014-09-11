@@ -30,3 +30,8 @@ thread_delete:
     path:     /secure/thread/{id}/delete
     defaults: { _controller: "JamesMannionForumBundle:Thread:delete" }
     requirements: { _method: post|delete }
+
+thread_watch_toggle:
+    path:     /secure/thread/{id}/watch
+    defaults: { _controller: "JamesMannionForumBundle:Thread:watchToggle" }
+    requirements: { _method: get }

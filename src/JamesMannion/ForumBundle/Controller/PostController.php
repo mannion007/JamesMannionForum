@@ -12,6 +12,7 @@ use JamesMannion\ForumBundle\Form\PostType;
 use JamesMannion\ForumBundle\Constants\AppConfig;
 use JamesMannion\ForumBundle\Constants\PageTitle;
 use JamesMannion\ForumBundle\Constants\ErrorFlash;
+use Symfony\Component\HttpFoundation\Response;
 
 class PostController extends BaseController
 {
@@ -29,6 +30,28 @@ class PostController extends BaseController
             'pageTitle'     => PageTitle::POSTS_LIST,
             'posts'         => $postsToShow,
         ));
+    }
+
+    /**
+     * @param Post $postToLikeToggle
+     * @return Response
+     */
+    public function likeToggleAction(Post $postToLikeToggle)
+    {
+        if(true === $postToLikeToggle->hasLiker($this->getUser())) {
+            $postToLikeToggle->removeLiker($this->getUser());
+            $likeStatus = false;
+        } else {
+            $postToLikeToggle->addLiker($this->getUser());
+            $likeStatus = true;
+        }
+
+        $entityManager = $this->getDoctrine()->getManager();
+        $entityManager->merge($postToLikeToggle);
+        $entityManager->flush();
+
+        $response = array("likeStatus" => $likeStatus, "code" => 100, "success" => true);
+        return new Response(json_encode($response));
     }
 
     /**

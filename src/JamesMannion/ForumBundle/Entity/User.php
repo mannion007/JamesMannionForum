@@ -43,10 +43,16 @@ class User implements AdvancedUserInterface, \Serializable
     private $threads;
 
     /**
-     * @ORM\ManyToMany(targetEntity="Thread", inversedBy="watchers", cascade={"persist"})
-     * @ORM\JoinTable(name="ThreadUser")
+     * @ORM\ManyToMany(targetEntity="Thread", mappedBy="watchers")
+     *
      **/
-    private $threadsWatching;
+    private $threadWatches;
+
+    /**
+     * @ORM\ManyToMany(targetEntity="Post", mappedBy="likers")
+     *
+     **/
+    private $postLikes;
 
     /**
      * @var string
@@ -189,17 +195,45 @@ class User implements AdvancedUserInterface, \Serializable
     /**
      * @param mixed $threadsWatching
      */
-    public function setThreadsWatching($threadsWatching)
+    public function setThreadWatches($threadsWatching)
     {
-        $this->threadsWatching = $threadsWatching;
+        $this->threadWatches = $threadsWatching;
     }
 
     /**
      * @return mixed
      */
-    public function getThreadsWatching()
+    public function getThreadWatches()
     {
-        return $this->threadsWatching;
+        return $this->threadWatches;
+    }
+
+    /**
+     * @param mixed $likes
+     */
+    public function setPostLikes($likes)
+    {
+        $this->postLikes = $likes;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getPostLikes()
+    {
+        return $this->postLikes;
+    }
+
+    /**
+     * @param Post $postToCheck
+     * @return bool
+     */
+    public function hasLike(Post $postToCheck)
+    {
+        if (true === $this->postLikes->hasElement($postToCheck)) {
+            return true;
+        }
+        return false;
     }
 
     /**

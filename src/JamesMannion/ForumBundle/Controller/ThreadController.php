@@ -10,6 +10,7 @@ use JamesMannion\ForumBundle\Form\ThreadType;
 use JamesMannion\ForumBundle\Constants\AppConfig;
 use JamesMannion\ForumBundle\Constants\PageTitle;
 use JamesMannion\ForumBundle\Constants\SuccessFlash;
+use Symfony\Component\HttpFoundation\Response;
 
 class ThreadController extends BaseController
 {
@@ -27,6 +28,28 @@ class ThreadController extends BaseController
             'title'         => PageTitle::THREADS_LIST,
             'threads'       => $threadsToShow
         ));
+    }
+
+    /**
+     * @param Thread $threadToWatchToggle
+     * @return Response
+     */
+    public function watchToggleAction(Thread $threadToWatchToggle)
+    {
+        if(true === $threadToWatchToggle->hasWatcher($this->getUser())) {
+            $threadToWatchToggle->removeWatcher($this->getUser());
+            $watchStatus = false;
+        } else {
+            $threadToWatchToggle->addWatcher($this->getUser());
+            $watchStatus = true;
+        }
+
+        $entityManager = $this->getDoctrine()->getManager();
+        $entityManager->merge($threadToWatchToggle);
+        $entityManager->flush();
+
+        $response = array("watchStatus" => $watchStatus, "code" => 100, "success" => true);
+        return new Response(json_encode($response));
     }
 
     /**

@@ -30,3 +30,8 @@ post_delete:
     path:     /secure/post/{id}/delete
     defaults: { _controller: "JamesMannionForumBundle:Post:delete" }
     requirements: { _method: post|delete }
+
+post_like_toggle:
+    path:     /secure/post/{id}/like
+    defaults: { _controller: "JamesMannionForumBundle:Post:likeToggle" }
+    requirements: { _method: get }

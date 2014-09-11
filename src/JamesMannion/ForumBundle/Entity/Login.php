@@ -7,7 +7,7 @@ use Doctrine\ORM\Mapping as ORM;
 /**
  * Login
  *
- * @ORM\Table(name="login")
+ * @ORM\Table(name="Login")
  * @ORM\Entity
  * @ORM\HasLifecycleCallbacks
  */
