@@ -23,52 +23,67 @@
         {% include 'BraincraftedBootstrapBundle::ie8-support.html.twig' %}
     </head>
     <body>
+    <header>
+        <div id="logo" class="pull-left">
+            <a href="{{ path('JamesMannionForumBundle_homepage') }}">{{ appConfig.systemName }}</a>
+        </div>
+        <div class="pull-right">
+            {% if app.user %}
+                <div class="pull-right clearfix">
+                    <ul class="nav navbar-nav navbar-right">
+                        <li class="dropdown" id="logged-in-as">
+                            <a href="#" class="dropdown-toggle" data-toggle="dropdown">Logged in as {{ app.user.username }} <b class="caret"></b></a>
+                            <ul class="dropdown-menu">
+                                <li><a href="{{ path('JamesMannionForumBundle_logout') }}">Logout</a></li>
+                            </ul>
+                        </li>
+                    </ul>
+                </div>
+            {% else %}
+                <div class="pull-right" id="login">
+                    {{ render(controller('JamesMannionForumBundle:Authentication:loginForm')) }}
+                </div>
+            {% endif %}
+        </div>
+    </header>
+    <div id="topnav">
         <div class="container">
-            <div class="row" id="header">
-                <div class="container">
-                    <div class="col-sm-12 col-md-3">
-                        <a href="{{ path('JamesMannionForumBundle_homepage') }}"><img src="{{ asset('bundles/jamesmannionforum/images/logo.png') }}" alt="Welcome" id="logo"/></a>
-                    </div>
-                    <div class="col-sm-12 col-md-9">
-                            {% if app.user %}
-                                <div class="pull-right clearfix">
-                                    <ul class="nav navbar-nav navbar-right">
-                                        <li class="dropdown" id="logged-in-as">
-                                            <a href="#" class="dropdown-toggle" data-toggle="dropdown">Logged in as {{ app.user.username }} <b class="caret"></b></a>
-                                            <ul class="dropdown-menu">
-                                                <li><a href="{{ path('JamesMannionForumBundle_logout') }}">Logout</a></li>
-                                            </ul>
-                                        </li>
-                                    </ul>
+            <ul>
+                <li>
+                    <a href="{{ path('JamesMannionForumBundle_homepage') }}">
+                        <span class="glyphicon glyphicon-home"></span>
+                        Forum Index
+                    </a>
+                </li>
+            </ul>
+        </div>
+    </div>
+        <div class="container">
+            <div class="row">
+                <div id="left-column" class="col-xs-12 col-lg-9">
+                        {% for type, messages in app.session.flashBag.all %}
+                            {% for message in messages %}
+                                <div class="alert alert-{{ type }}">
+                                    {{ message|trans({}, 'FOSUserBundle') }}
                                 </div>
-                            {% else %}
-                                <div class="pull-right" id="login">
-                                    {{ render(controller('JamesMannionForumBundle:Authentication:loginForm')) }}
-                                </div>
-                            {% endif %}
-                    </div>
+                            {% endfor %}
+                        {% endfor %}
+                    {% block body %}{% endblock body %}
+                </div>
+
+                <div id="right-column" class="col-xs-12 col-lg-3">
+                    {% block sidebar %}
+                        <div class="panel panel-primary">
+                            <div class="panel-heading">STATISTICS</div>
+                            <div class="panel-body">
+                                Panel content
+                            </div>
+                        </div>
+                    {% endblock sidebar %}
                 </div>
             </div>
-
-        </div>
-        <div class="container">
-
-            <h1>{% block contentTitle %}{% endblock contentTitle %}</h1>
-
-            {% for type, messages in app.session.flashBag.all %}
-                {% for message in messages %}
-                    <div class="alert alert-{{ type }}">
-                        {{ message|trans({}, 'FOSUserBundle') }}
-                    </div>
-                {% endfor %}
-            {% endfor %}
-
-            {% block body %}{% endblock body %}
-
         </div>
 
-        <!-- jQuery (necessary for Bootstraps JavaScript plugins) -->
-        <script src="{{ asset('js/jquery.js') }}"></script>
         <!-- Include all JavaScripts, compiled by Assetic -->
         <script src="{{ asset('js/bootstrap.js') }}"></script>
     </body>

@@ -20,9 +20,7 @@ class BuildingFixtures extends AbstractFixture implements OrderedFixtureInterfac
             $room = new Room();
             $room->setBuilding($this->getReference('building' . (rand(0,4))));
             $room->setName('My Lovely Room #' . $i);
-            $room->setDescription('Lorem ipsum dolor sit amet, consectetur adipiscing elit. Aenean congue,
-            libero sed aliquam dictum, leo arcu molestie ligula, hendrerit consectetur tellus felis at eros.
-            Integer vitae tellus euismod, vulputate leo id, mattis metus.');
+            $room->setDescription('Lorem ipsum dolor sit amet, consectetur adipiscing elit. Aenean congue, libero.');
 
             $manager->persist($room);
             $manager->flush();

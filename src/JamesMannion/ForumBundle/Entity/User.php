@@ -15,9 +15,8 @@ use Doctrine\ORM\Mapping\OrderBy;
 
 /**
  * User
- *
- * @ORM\Table(name="User")
  * @ORM\Entity
+ * @ORM\Table(name="User")
  * @ORM\HasLifecycleCallbacks
  */
 class User implements AdvancedUserInterface, \Serializable
@@ -60,6 +59,11 @@ class User implements AdvancedUserInterface, \Serializable
      * @ORM\Column(name="username", type="string", length=100, unique=true, nullable=false)
      */
     private $username;
+
+    /**
+     * @ORM\OneToOne(targetEntity="Avatar", mappedBy="user", cascade={"persist"})
+     */
+    private $avatar;
 
     /**
      * @var string
@@ -250,6 +254,33 @@ class User implements AdvancedUserInterface, \Serializable
     public function getUsername()
     {
         return $this->username;
+    }
+
+    /**
+     * @param mixed $avatar
+     */
+    public function setAvatar($avatar)
+    {
+        $this->avatar = $avatar;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getAvatar()
+    {
+        return $this->avatar;
+    }
+
+    /**
+     * @return bool
+     */
+    public function hasAvatar()
+    {
+        if (false === is_null($this->avatar)) {
+            return true;
+        }
+        return false;
     }
 
     /**

@@ -8,7 +8,10 @@
 
 namespace JamesMannion\ForumBundle\Controller;
 
+use JamesMannion\ForumBundle\Entity\Avatar;
 use JamesMannion\ForumBundle\Event\UserEvent;
+use JamesMannion\ForumBundle\Form\User\UserUpdateForm;
+use JamesMannion\ForumBundle\Form\UserType;
 use Symfony\Component\HttpFoundation\Request;
 use JamesMannion\ForumBundle\Entity\User;
 use JamesMannion\ForumBundle\Form\User\UserCreateForm;
@@ -92,5 +95,53 @@ class UserController extends BaseController
                 'appConfig'     => $this->appConfig,
                 'pageTitle'     => PageTitle::USER_CREATE,
                 'form'          => $form->createView()));
+    }
+
+    public function editAction()
+    {
+        $user = $this->getUser();
+        $avatar = new Avatar();
+        $editForm = $this->createEditForm($avatar);
+        return $this->render('JamesMannionForumBundle:User:edit.html.twig', array(
+            'appConfig'     => $this->appConfig,
+            'user'          => $this->getUser(),
+            'form'          => $editForm->createView()
+        ));
+    }
+
+    public function updateAction(Request $request)
+    {
+        $editForm = $this->createEditForm();
+        $editForm->handleRequest($request);
+
+        if ($editForm->isValid()) {
+            /** @var Avatar $uploadedAvatar */
+            $uploadedAvatar = $editForm->getData();
+            if(null != $uploadedAvatar){
+                $this->getUser()->setAvatar($uploadedAvatar);
+                $uploadedAvatar->setUser($this->getUser());
+                $em = $this->getDoctrine()->getManager();
+                $em->persist($uploadedAvatar);
+                $em->flush();
+            }
+
+            return $this->redirect($this->generateUrl('userEdit'));
+        }
+
+        return $this->render('JamesMannionForumBundle:User:edit.html.twig', array(
+            'appConfig'     => $this->appConfig,
+            'user'          => $this->getUser(),
+            'form'     => $editForm->createView()
+        ));
+    }
+
+    private function createEditForm()
+    {
+        $form = $this->createForm(new UserUpdateForm(), new Avatar(), array(
+            'action' => $this->generateUrl('userUpdate', array('id' => $this->getUser()->getId())),
+            'method' => 'PUT',
+        ));
+        $form->add('submit', 'submit', array('label' => 'Update'));
+        return $form;
     }
 }

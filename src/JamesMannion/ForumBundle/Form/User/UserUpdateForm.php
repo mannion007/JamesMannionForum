@@ -1,16 +1,17 @@
 <?php
 
-namespace JamesMannion\ForumBundle\Form;
+namespace JamesMannion\ForumBundle\Form\User;
 
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolverInterface;
 use JamesMannion\ForumBundle\Constants\Label;
+use JamesMannion\ForumBundle\Constants\Validation as Validation;
 
-class PostType extends AbstractType
+class UserUpdateForm extends AbstractType
 {
 
-    private $name = 'postForm';
+    private $name = 'profileForm';
 
     /**
      * @param FormBuilderInterface $builder
@@ -20,17 +21,14 @@ class PostType extends AbstractType
     {
         $builder
             ->add(
-                'body',
-                'textarea',
+                'file',
+                'file',
                 array(
-                    'label' => Label::POST_BODY
-                )
-            )
-            ->add(
-                'primaryPost',
-                'hidden',
-                array(
-                    'data' => true
+                    'label' => Label::PROFILE_AVATAR,
+                    'data_class'        => 'JamesMannion\ForumBundle\Entity\Avatar',
+                    'csrf_protection'   => true,
+                    'csrf_field_name'   => '_token',
+                    'intention'         => 'file'
                 )
             );
     }
@@ -41,7 +39,7 @@ class PostType extends AbstractType
     public function setDefaultOptions(OptionsResolverInterface $resolver)
     {
         $resolver->setDefaults(array(
-            'data_class' => 'JamesMannion\ForumBundle\Entity\Post'
+            'data_class' => 'JamesMannion\ForumBundle\Entity\Avatar'
         ));
     }
 

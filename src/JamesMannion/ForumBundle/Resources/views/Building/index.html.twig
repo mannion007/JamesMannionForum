@@ -5,27 +5,39 @@
 {% block body -%}
     {% for building in buildings %}
         {% if(building.rooms|length > 0) %}
-            <h3>{{ building.name }}</h3>
-            <table class="table table-responsive table-striped">
-                <thead>
-                <tr>
-                    <th>Name</th>
-                    <th>Description</th>
-                    <th>Threads</th>
-                    <th>Last Post</th>
-                </tr>
-                </thead>
-                <tbody>
-                {% for room in building.rooms %}
+            <div class="panel panel-primary">
+                <div class="panel-heading">
+                    {{ building.name }}
+                    <a data-toggle="collapse" data-target="#builing-{{ building.id }}">
+                        <span class="glyphicon glyphicon-circle-arrow-up pull-right"></span>
+                    </a>
+                </div>
+                <table class="table table-responsive collapse in" id="builing-{{ building.id }}">
+                    <thead>
                     <tr>
-                        <td><a href="{{ path('room_show', { 'id': room.id }) }}">{{ room.name }}</a></td>
-                        <td>{{ room.description }}</td>
-                        <td>{{ room.threads | length }}</td>
-                        <td><a href="{{ path('user_show', { 'id': room.threads|first.posts|last.author.id }) }}">{{ room.threads|first.posts|last.author }}</a></td>
+                        <th class="col-xs-8"></th>
+                        <th class="col-xs-1 narrow">Threads</th>
+                        <th class="col-xs-3">Last Post</th>
                     </tr>
-                {% endfor %}
-                </tbody>
-            </table>
+                    </thead>
+                    <tbody>
+                    {% for room in building.rooms %}
+                        <tr>
+                            <td>
+                                <a href="{{ path('room_show', { 'id': room.id }) }}" class="building-name">{{ room.name }}</a><br/>
+                                <p>{{ room.description }}</p>
+                            </td>
+                            <td class="narrow">{{ room.threads | length }}</td>
+                            <td>
+                                By <a href="{{ path('user_show', { 'id': room.threads|first.posts|last.author.id }) }}">{{ room.threads|first.posts|last.author }} <span class="glyphicon glyphicon-circle-arrow-right"></span></a><br/>
+                                {{ room.threads|first.posts|last.updated|date(appConfig.dateDisplayFormat) }}
+                            </td>
+                        </tr>
+                    {% endfor %}
+                    </tbody>
+                </table>
+
+            </div>
         {% endif %}
     {% endfor %}
 

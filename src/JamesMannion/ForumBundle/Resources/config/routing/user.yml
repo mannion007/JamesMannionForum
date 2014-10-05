@@ -21,3 +21,14 @@ JamesMannionForumBundle_userCreated:
     defaults: { _controller: JamesMannionForumBundle:User:create }
     requirements:
         _method: POST
+
+userEdit:
+    path:     /profile
+    defaults: { _controller: "JamesMannionForumBundle:User:edit" }
+    requirements:
+        _method: GET
+
+userUpdate:
+    path:     /profile/update
+    defaults: { _controller: "JamesMannionForumBundle:User:update" }
+    requirements: { _method: post|put }

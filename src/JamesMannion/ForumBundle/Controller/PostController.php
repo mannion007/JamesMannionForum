@@ -50,7 +50,15 @@ class PostController extends BaseController
         $entityManager->merge($postToLikeToggle);
         $entityManager->flush();
 
-        $response = array("likeStatus" => $likeStatus, "code" => 100, "success" => true);
+        $likerUsernames = array();
+        foreach($postToLikeToggle->getLikers() as $liker)
+        {
+            $likerUsernames[] = $liker->getUsername();
+        }
+
+        $likerUsernames = implode(',', $likerUsernames);
+
+        $response = array("likerUsernames" => $likerUsernames, "code" => 100, "success" => true);
         return new Response(json_encode($response));
     }
 

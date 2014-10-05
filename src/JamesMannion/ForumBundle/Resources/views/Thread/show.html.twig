@@ -25,7 +25,12 @@
             <tbody>
             {% for post in posts %}
                 <tr>
-                    <td>{{ post.author.username }}</td>
+                    <td>
+                        {{ post.author.username }}
+                        {% if true == post.author.hasAvatar %}
+                            <img src="{{ post.author.avatar.webpath }}" width="70"/>
+                        {% endif %}
+                    </td>
                     <td>{{ post.body }}</td>
                     <td>{{ post.created|date(appConfig.dateDisplayFormat) }}</td>
                     <td>{{ post.updated|date(appConfig.dateDisplayFormat) }}</td>

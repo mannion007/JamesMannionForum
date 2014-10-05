@@ -42,6 +42,8 @@ class Label {
     const REGISTRATION_MEMORABLE_QUESTION   = 'Memorable Question';
     const REGISTRATION_MEMORABLE_ANSWER     = 'Answer to Memorable Question';
 
+    const PROFILE_AVATAR = 'Avatar';
+
     /*
      * Authentication
      */
