@@ -8,7 +8,7 @@ use Doctrine\Common\Persistence\ObjectManager;
 use JamesMannion\ForumBundle\Constants\Fixtures;
 use JamesMannion\ForumBundle\Entity\Building;
 
-class RoomFixtures extends AbstractFixture implements OrderedFixtureInterface
+class BuildingFixtures extends AbstractFixture implements OrderedFixtureInterface
 {
     /**
      * @param ObjectManager $manager
@@ -23,13 +23,13 @@ class RoomFixtures extends AbstractFixture implements OrderedFixtureInterface
             $building->setHidden(false);
             $manager->persist($building);
             $manager->flush();
-
             $this->addReference('building' . $i, $building);
+
         }
     }
 
     public function getOrder()
     {
-        return Fixtures::ROOM_FIXTURES_ORDER;
+        return Fixtures::BUILDING_FIXTURES_ORDER;
     }
 }

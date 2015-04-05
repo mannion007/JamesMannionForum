@@ -8,8 +8,10 @@ use Doctrine\Common\Persistence\ObjectManager;
 use JamesMannion\ForumBundle\Constants\Fixtures;
 use JamesMannion\ForumBundle\Entity\Room;
 
-class BuildingFixtures extends AbstractFixture implements OrderedFixtureInterface
+class RoomFixtures extends AbstractFixture implements OrderedFixtureInterface
 {
+
+
     /**
      * @param ObjectManager $manager
      */
@@ -34,3 +36,4 @@ class BuildingFixtures extends AbstractFixture implements OrderedFixtureInterfac
         return Fixtures::ROOM_FIXTURES_ORDER;
     }
 }
+
